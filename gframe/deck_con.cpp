@@ -58,8 +58,9 @@ void DeckBuilder::Initialize(bool refresh) {
 	mainGame->mTopMenu->setVisible(false);
 	mainGame->wInfos->setVisible(true);
 	mainGame->wCardImg->setVisible(true);
-	mainGame->wDeckEdit->setVisible(true);
-	mainGame->wFilter->setVisible(true);
+	//mainGame->wDeckEdit->setVisible(true);
+	//mainGame->wFilter->setVisible(true);
+	mainGame->tabs_deck_editor.w_ControlTabPanel->setVisible(true);
 	mainGame->wSort->setVisible(true);
 	mainGame->btnLeaveGame->setVisible(true);
 	mainGame->btnLeaveGame->setText(gDataManager->GetSysString(1306).data());
@@ -98,9 +99,10 @@ void DeckBuilder::Terminate(bool showmenu) {
 		mainGame->ClearCardInfo();
 		mainGame->mTopMenu->setVisible(true);
 	}
-	mainGame->wDeckEdit->setVisible(false);
+	//mainGame->wDeckEdit->setVisible(false);//removed by the new layout
 	mainGame->wCategories->setVisible(false);
-	mainGame->wFilter->setVisible(false);
+	//mainGame->wFilter->setVisible(false);//removed by the new layout
+	mainGame->tabs_deck_editor.w_ControlTabPanel->setVisible(false);
 	mainGame->wSort->setVisible(false);
 	if(showmenu) {
 		mainGame->wCardImg->setVisible(false);
