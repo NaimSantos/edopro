@@ -2124,6 +2124,10 @@ bool ClientField::OnCommonEvent(const irr::SEvent& event, bool& stopPropagation)
 				}
 				return true;
 			}
+			if (event.GUIEvent.Caller == mainGame->tabs_deck_editor.w_ControlTabPanel) {
+				// handle deck-tab changes here
+				return true;
+			}
 			break;
 		}
 		case irr::gui::EGET_COMBO_BOX_CHANGED: {

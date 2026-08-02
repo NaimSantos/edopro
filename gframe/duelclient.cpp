@@ -82,7 +82,7 @@ void DuelClient::JoinFromDiscord() {
 	HIDE_AND_CHECK(mainGame->wCreateHost);
 	HIDE_AND_CHECK(mainGame->wReplay);
 	HIDE_AND_CHECK(mainGame->wSinglePlay);
-	HIDE_AND_CHECK(mainGame->wDeckEdit);
+	//HIDE_AND_CHECK(mainGame->wDeckEdit); //removed by the new layout
 	HIDE_AND_CHECK(mainGame->wRules);
 	HIDE_AND_CHECK(mainGame->wRoomListPlaceholder);
 	HIDE_AND_CHECK(mainGame->wCardImg);
@@ -636,8 +636,9 @@ void DuelClient::HandleSTOCPacketLanAsync(const std::vector<uint8_t>& data) {
 		mainGame->is_siding = true;
 		mainGame->wChat->setVisible(false);
 		mainGame->wPhase->setVisible(false);
-		mainGame->wDeckEdit->setVisible(false);
-		mainGame->wFilter->setVisible(false);
+		//mainGame->wDeckEdit->setVisible(false); //removed by the new layout
+		//mainGame->wFilter->setVisible(false);//removed by the new layout
+		mainGame->tabs_deck_editor.w_ControlTabPanel->setVisible(false);
 		mainGame->wSort->setVisible(false);
 		mainGame->stTip->setVisible(false);
 		mainGame->btnSideOK->setVisible(true);
@@ -1041,7 +1042,7 @@ void DuelClient::HandleSTOCPacketLanAsync(const std::vector<uint8_t>& data) {
 			mainGame->dField.Clear();
 			mainGame->is_building = false;
 			mainGame->is_siding = false;
-			mainGame->wDeckEdit->setVisible(false);
+			//mainGame->wDeckEdit->setVisible(false); //removed by the new layout
 			mainGame->btnCreateHost->setEnabled(mainGame->coreloaded);
 			mainGame->btnJoinHost->setEnabled(true);
 			mainGame->btnJoinCancel->setEnabled(true);
