@@ -807,13 +807,16 @@ void Game::Initialize() {
 	}
 
 	//Opções na tab de Search options:
-	stSearch = env->addStaticText(gDataManager->GetSysString(1325).data(), Scale(10, 10, 110, 50), false, false, mainGame->tabs_deck_editor.panel_for_tab3);
+	auto SubPanelSearchOptions = mainGame->tabs_deck_editor.panel_for_tab3->getSubpanel();
+	stSearch = env->addStaticText(gDataManager->GetSysString(1325).data(), Scale(gap, gap, gap+width, gap+height), false, false, SubPanelSearchOptions);
 	defaultStrings.emplace_back(stSearch, 1325);
-	ebCardName = AlignElementWithParent(env->addEditBox(L"", Scale(120, 10, 220, 50), true, mainGame->tabs_deck_editor.panel_for_tab3, EDITBOX_KEYWORD));
+
+	ebCardName = env->addEditBox(L"", Scale(gap+width+dx, gap, gap + 3*width + dx, gap+height), true, SubPanelSearchOptions, EDITBOX_KEYWORD);
 	ebCardName->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
-	btnStartFilter = AlignElementWithParent(env->addButton(Scale(10, 60, 110, 110), mainGame->tabs_deck_editor.panel_for_tab3, BUTTON_START_FILTER, gDataManager->GetSysString(1327).data()));
+
+	btnStartFilter = env->addButton(Scale(gap, gap+height+dy, gap + width, gap + 2*height+dy), SubPanelSearchOptions, BUTTON_START_FILTER, gDataManager->GetSysString(1327).data());
 	defaultStrings.emplace_back(btnStartFilter, 1327);
-	btnClearFilter = AlignElementWithParent(env->addButton(Scale(120, 60, 220, 110), mainGame->tabs_deck_editor.panel_for_tab3, BUTTON_CLEAR_FILTER, gDataManager->GetSysString(1304).data()));
+	btnClearFilter = env->addButton(Scale(gap + width + dx, gap+height+dy, gap + 2*width+dx, gap + 2*height +dy), SubPanelSearchOptions, BUTTON_CLEAR_FILTER, gDataManager->GetSysString(1304).data());
 	defaultStrings.emplace_back(btnClearFilter, 1304);
 
 	
@@ -3743,11 +3746,21 @@ void Game::OnResize() {
 
 	SetCentered(wYdkeManage, false);
 	SetCentered(wHandTest, false);
+
+	const irr::s32 gap = 5;        // um deslocamento do canto superior esquerdo, para definir o primeiro botao
+	const irr::s32 height = 40;    // altura padrao de um botão
+	const irr::s32 width = 80;     // largura padrao de um botao
+	const irr::s32 dx = 15;        // espaço na horizontal entre os botoes
+	const irr::s32 dy = 15;        // espaço na vertical entre os "botoes"
+
+
 	//tabs_deck_editor.w_ControlTabPanel->setRelativePosition(ResizeWin(309, 8, 1020, 130)); nao funcionou
 	wCategories->setRelativePosition(ResizeWin(450, 60, 1000, 270));
 	wLinkMarks->setRelativePosition(ResizeWin(700, 30, 820, 150));
+	//stBanlist->setRelativePosition(ResizeWin(gap, gap, gap+width, gap+height));
 	stBanlist->setRelativePosition(ResizeWin(10, 9, 100, 29));
-	stDeck->setRelativePosition(ResizeWin(10, 39, 100, 59));
+	//stDeck->setRelativePosition(ResizeWin(10, 39, 100, 59));
+	stDeck->setRelativePosition(ResizeWin(gap, gap+height+dy, gap + width+dx, gap + 2*height+dy));
 	stCategory->setRelativePosition(ResizeWin(10, 5, 70, 25));
 	stLimit->setRelativePosition(ResizeWin(205, 5, 280, 25));
 	stAttribute->setRelativePosition(ResizeWin(10, 28, 70, 48));
@@ -3755,7 +3768,8 @@ void Game::OnResize() {
 	stAttack->setRelativePosition(ResizeWin(205, 28, 280, 48));
 	stDefense->setRelativePosition(ResizeWin(205, 51, 280, 71));
 	stStar->setRelativePosition(ResizeWin(10, 74, 80, 94));
-	stSearch->setRelativePosition(ResizeWin(205, 74, 280, 94));
+	//stSearch->setRelativePosition(ResizeWin(5, 74, 280, 94));
+	stSearch->setRelativePosition(ResizeWin(gap, gap, gap+width, gap+height));
 	stScale->setRelativePosition(ResizeWin(110, 74, 150, 94));
 
 	wLanWindow->setRelativePosition(ResizeWin(220, 100, 800, 520));
