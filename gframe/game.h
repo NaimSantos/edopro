@@ -392,7 +392,7 @@ struct deck_edit_page_elements {
 
 
 	triple_control_tab tabs_deck_editor;
-	triple_control_tab tabs_card_types;
+	//triple_control_tab tabs_card_types;
 	//sort type
 	irr::gui::IGUIStaticText* wSort;
 	irr::gui::IGUIComboBox* cbSortType;

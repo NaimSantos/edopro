@@ -636,7 +636,7 @@ void Game::Initialize() {
 	cbSortType = AlignElementWithParent(AddComboBox(env, Scale(10, 2, 85, 22), wSort, COMBOBOX_SORTTYPE));
 	cbSortType->setMaxSelectionRows(10);
 	ReloadCBSortType();
-	wSort->setVisible(false);
+	wSort->setVisible(true);
 	wSort->setBackgroundColor(irr::video::SColor(255, 0, 0, 255));
 
 	//filters
@@ -647,135 +647,160 @@ void Game::Initialize() {
 
 
 	//Tabs de controle do deck editor
-	const irr::s32 x_ini = 309; //ini = initial, f = final
-	const irr::s32 y_ini = 10;
-	const irr::s32 deltax    = 711;
-	const irr::s32 deltay    = 120;
-	// Tentativa
-	const irr::s32 gap = 5;    // um deslocamento do canto superior esquerdo, para definir o primeiro botao
-	const irr::s32 height = 40;   // altura padrao de um botão
-	const irr::s32 width = 80;   // largura padrao de um botao
-	const irr::s32 dx = 15;   //espaço na horizontal entre os botoes
-	const irr::s32 dy = 15;   // espaço na vertical entre os "botoes"
+	const int x_ini = 309; //ini = initial, f = final
+	const int y_ini = 10;
+	const int deltax    = 711;
+	const int deltay    = 120;
 
-	mainGame->tabs_deck_editor.w_ControlTabPanel = AlignElementWithParent(irr::gui::CGUICustomTabControl::addCustomTabControl(env, Scale(x_ini, y_ini, x_ini+ deltax, y_ini+deltay), 0, true));
+	mainGame->tabs_deck_editor.w_ControlTabPanel = AlignElementWithParent(irr::gui::CGUICustomTabControl::addCustomTabControl(env, Scale(x_ini, y_ini, x_ini+ deltax, y_ini+deltay), 0));
 	mainGame->tabs_deck_editor.w_ControlTabPanel->setVisible(false);
 	{
-		//Trocar esse +40 aqui por coisas que talvez façam sentido, tipo +30 funciona
+		//Trocar esse getHeight() + 30 or  +40 aqui por coisas que talvez façam sentido
 		// Construcao da tab para Deck management:
 		auto tabDeckOptions = mainGame->tabs_deck_editor.tab1;
 		tabDeckOptions = mainGame->tabs_deck_editor.w_ControlTabPanel->addTab(gDataManager->GetSysString(1728).data());
 		defaultStrings.emplace_back(tabDeckOptions, 1728);
+		tabDeckOptions->updateAbsolutePosition();
+		//auto client = tabDeckOptions->getClientRect();
 		mainGame->tabs_deck_editor.panel_for_tab1 = irr::gui::Panel::addPanel(env, tabDeckOptions, -1,
-			irr::core::recti(0,0, tabDeckOptions->getRelativePosition().getWidth(), tabDeckOptions->getRelativePosition().getHeight() + 40), true, false);
+			irr::core::recti(0,0, tabDeckOptions->getRelativePosition().getWidth(), tabDeckOptions->getRelativePosition().getHeight()), true, false);
 		// Construcao da tab para Filtering options:
 		auto tabFilterOptions = mainGame->tabs_deck_editor.tab2;
 		tabFilterOptions = mainGame->tabs_deck_editor.w_ControlTabPanel->addTab(gDataManager->GetSysString(1729).data());
 		defaultStrings.emplace_back(tabFilterOptions, 1729);
 		mainGame->tabs_deck_editor.panel_for_tab2 = irr::gui::Panel::addPanel(env, tabFilterOptions, -1,
-			irr::core::recti(0,0, tabFilterOptions->getRelativePosition().getWidth(), tabFilterOptions->getRelativePosition().getHeight() + 40), true, false);
+			irr::core::recti(0,0, tabFilterOptions->getRelativePosition().getWidth(), tabFilterOptions->getRelativePosition().getHeight()), true, false);
 		//Construcao da tab para Search:
 		auto tabSearchOptions = mainGame->tabs_deck_editor.tab3;
 		tabSearchOptions = mainGame->tabs_deck_editor.w_ControlTabPanel->addTab(gDataManager->GetSysString(1730).data());
 		defaultStrings.emplace_back(tabSearchOptions, 1730);
 		mainGame->tabs_deck_editor.panel_for_tab3 = irr::gui::Panel::addPanel(env, tabSearchOptions, -1,
-			irr::core::recti(0, 0, tabSearchOptions->getRelativePosition().getWidth(), tabSearchOptions->getRelativePosition().getHeight() + 40), true, false);
+			irr::core::recti(0, 0, tabSearchOptions->getRelativePosition().getWidth(), tabSearchOptions->getRelativePosition().getHeight()), true, false);
 	}
 
 
 
+	// Tentativa
+	int g = 5;    // gap, um deslocamento do canto superior esquerdo, para definir o primeiro botao
+	int y = 35;   // altura padrao de um botão
+	int x = 80;   // largura padrao de um botao
+	int dx = 25;   //espaço na horizontal entre os botoes
+	int dy = 5;   // espaço na vertical entre os "botoes"
+
 	//Inserçao das Opções na tab de Deck Management:
 	//"banlist" + menu do tipo dropdown para selecionar ban list:
 	auto SubPanelDeckOptions = mainGame->tabs_deck_editor.panel_for_tab1->getSubpanel();
-	//Textos: Banlist e Deck
-	stBanlist =env->addStaticText(gDataManager->GetSysString(1300).data(), Scale(gap, gap, gap+width, gap+height), false, false, SubPanelDeckOptions);
+	//Textos: "Ban list" e "Deck"
+	stBanlist = AlignElementWithParent(env->addStaticText(gDataManager->GetSysString(1300).data(), Scale(g, g, g+x, g+y), false, false, SubPanelDeckOptions));
 	defaultStrings.emplace_back(stBanlist, 1300);
-	stDeck = env->addStaticText(gDataManager->GetSysString(1301).data(), Scale(gap, gap+height+dy, gap+width, gap+2*height+dy), false, false, SubPanelDeckOptions);
+	stDeck = AlignElementWithParent(env->addStaticText(gDataManager->GetSysString(1301).data(), Scale(g, g+y+dy, g+x,g+2*y+dy), false, false, SubPanelDeckOptions));
 	defaultStrings.emplace_back(stDeck, 1301);
 
-	//Dropdown menus do lado de banlist e Decks:
-	cbDBLFList = AddComboBox(env, Scale(gap+width+dx, gap, gap+3*width+dx, gap+height), SubPanelDeckOptions, COMBOBOX_DBLFLIST);
+	
+	//Dropdown menus ao lado de "Ban list" e "Deck":
+	cbDBLFList = AlignElementWithParent(AddComboBox(env, Scale(g + 1 * x + 1 * dx, g, g + 3 * x + 1 * dx, g + y), SubPanelDeckOptions, COMBOBOX_DBLFLIST));
 	cbDBLFList->setMaxSelectionRows(10);
-	cbDBDecks = AddComboBox(env, Scale(gap+width+dx, gap+height+dy, gap+3*width+dx, gap+2*height+dy), SubPanelDeckOptions, COMBOBOX_DBDECKS);
+	cbDBDecks = AlignElementWithParent(AddComboBox(env, Scale(g + 1 * x + 1 * dx, g + y + dy, g + 3 * x + 1 * dx, g + 2 * y + dy), SubPanelDeckOptions, COMBOBOX_DBDECKS));
 	cbDBDecks->setMaxSelectionRows(15);
 
-	//Botao "Save" + caixa para digitar o texto do novo nome:
-	btnSaveDeck = env->addButton(Scale(gap+3*width+2*dx, gap, gap + 4*width+2*dx, gap+height), SubPanelDeckOptions, BUTTON_SAVE_DECK, gDataManager->GetSysString(1302).data());
+	//Botao "Save" + caixa para digitar o texto do novo nome (embaixo dele):
+	btnSaveDeck = env->addButton(Scale(g + 3 * x + 2 * dx, g, g + 4 * x + 2 * dx, g + y), SubPanelDeckOptions, BUTTON_SAVE_DECK, gDataManager->GetSysString(1302).data());
 	defaultStrings.emplace_back(btnSaveDeck, 1302);
-	ebDeckname = env->addEditBox(L"", Scale(gap+3*width+2*dx, gap+height+dy, gap + 4*width+2*dx, gap+2*height+dy), true, SubPanelDeckOptions, EDITBOX_DECK_NAME);
+	ebDeckname = env->addEditBox(L"", Scale(g + 3 * x + 2 * dx, g + y + dy, g + 4 * x + 2 * dx, g + 2 * y + dy), true, SubPanelDeckOptions, EDITBOX_DECK_NAME);
 	ebDeckname->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
 
-	//Botao Save as e Botao Rename:
-	btnSaveDeckAs = env->addButton(Scale(gap + 4 * width + 3 * dx, gap, gap + 5 * width + 2 * dx, gap + height), SubPanelDeckOptions, BUTTON_SAVE_DECK_AS, gDataManager->GetSysString(1303).data());
+	//Botao "Save as" e "Botao Rename":
+	btnSaveDeckAs = env->addButton(Scale(g + 4 * x + 3 * dx, g, g + 5 * x + 3 * dx, g + y), SubPanelDeckOptions, BUTTON_SAVE_DECK_AS, gDataManager->GetSysString(1303).data());
 	defaultStrings.emplace_back(btnSaveDeckAs, 1303);
-	btnRenameDeck = env->addButton(Scale(gap + 4 * width + 3 * dx, gap + height + dy, gap + 5 * width + 2 * dx, gap + 2 * height + dy), SubPanelDeckOptions, BUTTON_RENAME_DECK, gDataManager->GetSysString(1362).data());
+	btnRenameDeck = env->addButton(Scale(g + 4 * x + 3 * dx, g + y + dy, g + 5 * x + 3 * dx, g + 2 * y + dy), SubPanelDeckOptions, BUTTON_RENAME_DECK, gDataManager->GetSysString(1362).data());
 	defaultStrings.emplace_back(btnRenameDeck, 1362);
 
-	//Botao Deck shuffle e Sort Deck:
-	btnShuffleDeck = env->addButton(Scale(gap + 5 * width + 4 * dx, gap, gap + 6 * width + 3 * dx, gap + height), SubPanelDeckOptions, BUTTON_SHUFFLE_DECK, gDataManager->GetSysString(1307).data());
+	//Botao "Shuffle" e "Sort":
+	btnShuffleDeck = env->addButton(Scale(g + 5 * x + 4 * dx, g, g + 6 * x + 4 * dx, g + y), SubPanelDeckOptions, BUTTON_SHUFFLE_DECK, gDataManager->GetSysString(1307).data());
 	defaultStrings.emplace_back(btnShuffleDeck, 1307);
-	btnSortDeck = env->addButton(Scale(gap + 5 * width + 4 * dx, gap + height + dy, gap + 6 * width + 3 * dx, gap + 2 * height + dy), SubPanelDeckOptions, BUTTON_SORT_DECK, gDataManager->GetSysString(1305).data());
+	btnSortDeck = env->addButton(Scale(g + 5 * x + 4 * dx, g + y + dy, g + 6 * x + 4 * dx, g + 2 * y + dy), SubPanelDeckOptions, BUTTON_SORT_DECK, gDataManager->GetSysString(1305).data());
 	defaultStrings.emplace_back(btnSortDeck, 1305);
 	
-	//Botões: Clear Deck e Delete Deck:
-	btnClearDeck = env->addButton(Scale(gap + 6 * width + 5 * dx, gap, gap + 7 * width + 4 * dx, gap + height), SubPanelDeckOptions, BUTTON_CLEAR_DECK, gDataManager->GetSysString(1304).data());
+	//Botões: "Clear" e "Delete":
+	btnClearDeck = env->addButton(Scale(g + 6 * x + 5 * dx, g, g + 7 * x + 5 * dx, g + y), SubPanelDeckOptions, BUTTON_CLEAR_DECK, gDataManager->GetSysString(1304).data());
 	defaultStrings.emplace_back(btnClearDeck, 1304);
-	btnDeleteDeck = env->addButton(Scale(gap + 6 * width + 5 * dx, gap + height + dy, gap + 7 * width + 4 * dx, gap + 2 * height + dy), SubPanelDeckOptions, BUTTON_DELETE_DECK, gDataManager->GetSysString(1308).data());
+	btnDeleteDeck = env->addButton(Scale(g + 6 * x + 5 * dx, g + y + dy, g + 7 * x + 5 * dx, g + 2 * y + dy), SubPanelDeckOptions, BUTTON_DELETE_DECK, gDataManager->GetSysString(1308).data());
 	defaultStrings.emplace_back(btnDeleteDeck, 1308);
 
 
 	//mainGame->tabs_deck_editor.panel_for_tab1->updateAbsolutePosition();
 
+	/// IMCOMPLETO:
+
+	y = 25;   // altura padrao de um botão, aqui esta sendo modificada por que temos 3 linhas entao 35 estaria fora
+	x = 60;
+	dx = 25;
 	//Insercao das Opções na tab de Filtering options:
-	stCategory = env->addStaticText(gDataManager->GetSysString(1311).data(), Scale(10, 5, 70, 25), false, false, mainGame->tabs_deck_editor.tab2);
+	auto SubPanelFilterOptions = mainGame->tabs_deck_editor.panel_for_tab2->getSubpanel();
+	//Textos "Category" e "Atributes" e "Tipo":
+	stCategory = env->addStaticText(gDataManager->GetSysString(1311).data(), Scale(g, g, g+x, g+y), false, false, SubPanelFilterOptions);
 	defaultStrings.emplace_back(stCategory, 1311);
-	cbCardType = AlignElementWithParent(AddComboBox(env, Scale(60, 3, 120, 23), mainGame->tabs_deck_editor.panel_for_tab2, COMBOBOX_MAINTYPE));
+	stAttribute = env->addStaticText(gDataManager->GetSysString(1319).data(), Scale(g, g+y+dy, g+x, g+2*y+dy), false, false, SubPanelFilterOptions);
+	defaultStrings.emplace_back(stAttribute, 1319);
+	stRace = env->addStaticText(gDataManager->GetSysString(1321).data(), Scale(g, g+2*y+2*dy, g+x, g+3*y+2*dy), false, false, SubPanelFilterOptions);
+	defaultStrings.emplace_back(stRace, 1321);
+
+	//Dropdown menus ao lado de "Category" e "Atributes":
+	cbCardType = AlignElementWithParent(AddComboBox(env, Scale(g + 1 * x + 1 * dx, g, g + 2 * x + 1 * dx, g + y), SubPanelFilterOptions, COMBOBOX_MAINTYPE));
 	ReloadCBCardType();
-	cbCardType2 = AlignElementWithParent(AddComboBox(env, Scale(130, 3, 190, 23), mainGame->tabs_deck_editor.panel_for_tab2, COMBOBOX_SECONDTYPE));
+	cbCardType2 = AlignElementWithParent(AddComboBox(env, Scale(g + 2 * x + 1 * dx, g, g + 3 * x + 1 * dx, g + y), SubPanelFilterOptions, COMBOBOX_SECONDTYPE));
 	cbCardType2->setMaxSelectionRows(20);
 	cbCardType2->addItem(gDataManager->GetSysString(1310).data(), 0);
-	chkAnime = AlignElementWithParent(env->addCheckBox(gGameConfig->chkAnime, Scale(10, 96, 150, 118), mainGame->tabs_deck_editor.panel_for_tab2, CHECKBOX_SHOW_ANIME, gDataManager->GetSysString(1999).data()));
-	defaultStrings.emplace_back(chkAnime, 1999);
-	stLimit = env->addStaticText(gDataManager->GetSysString(1315).data(), Scale(205, 5, 280, 25), false, false, mainGame->tabs_deck_editor.panel_for_tab2);
-	defaultStrings.emplace_back(stLimit, 1315);
-	cbLimit = AlignElementWithParent(AddComboBox(env, Scale(260, 3, 390, 23), mainGame->tabs_deck_editor.panel_for_tab2, COMBOBOX_OTHER_FILT));
-	cbLimit->setMaxSelectionRows(10);
-	ReloadCBLimit();
-	stAttribute = env->addStaticText(gDataManager->GetSysString(1319).data(), Scale(10, 28, 70, 48), false, false, mainGame->tabs_deck_editor.panel_for_tab2);
-	defaultStrings.emplace_back(stAttribute, 1319);
-	cbAttribute = AlignElementWithParent(AddComboBox(env, Scale(60, 26, 190, 46), mainGame->tabs_deck_editor.panel_for_tab2, COMBOBOX_OTHER_FILT));
+	cbAttribute = AlignElementWithParent(AddComboBox(env, Scale(g + 1 * x + 1 * dx, g + y + dy, g + 3 * x + 1 * dx, g + 2 * y + dy), SubPanelFilterOptions, COMBOBOX_OTHER_FILT));
 	cbAttribute->setMaxSelectionRows(10);
 	ReloadCBAttribute();
-	stRace = env->addStaticText(gDataManager->GetSysString(1321).data(), Scale(10, 51, 70, 71), false, false, mainGame->tabs_deck_editor.panel_for_tab2);
-	defaultStrings.emplace_back(stRace, 1321);
-	cbRace = AlignElementWithParent(AddComboBox(env, Scale(60, 49, 190, 69), mainGame->tabs_deck_editor.panel_for_tab2, COMBOBOX_OTHER_FILT));
+	cbRace = AlignElementWithParent(AddComboBox(env, Scale(g + 1 * x + 1 * dx, g + 2 * y + 2 * dy, g + 3 * x + 1 * dx, g + 3 * y + 2 * dy), SubPanelFilterOptions, COMBOBOX_OTHER_FILT));
 	cbRace->setMaxSelectionRows(10);
 	ReloadCBRace();
-	stAttack = env->addStaticText(gDataManager->GetSysString(1322).data(), Scale(205, 28, 280, 48), false, false, mainGame->tabs_deck_editor.panel_for_tab2);
-	defaultStrings.emplace_back(stAttack, 1322);
-	ebAttack = AlignElementWithParent(env->addEditBox(L"", Scale(260, 26, 340, 46), true, mainGame->tabs_deck_editor.panel_for_tab2, EDITBOX_ATTACK));
-	ebAttack->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
-	stDefense = env->addStaticText(gDataManager->GetSysString(1323).data(), Scale(205, 51, 280, 71), false, false, mainGame->tabs_deck_editor.panel_for_tab2);
-	defaultStrings.emplace_back(stDefense, 1323);
-	ebDefense = AlignElementWithParent(env->addEditBox(L"", Scale(260, 49, 340, 69), true, mainGame->tabs_deck_editor.panel_for_tab2, EDITBOX_DEFENSE));
-	ebDefense->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
-	stStar = env->addStaticText(gDataManager->GetSysString(1324).data(), Scale(10, 74, 80, 94), false, false, mainGame->tabs_deck_editor.panel_for_tab2);
+
+	//Nivel e escala
+	stStar = env->addStaticText(gDataManager->GetSysString(1324).data(), Scale(g + 3 * x + 2 * dx, g, g + 4 * x + 2 * dx, g + y), false, false, SubPanelFilterOptions);
 	defaultStrings.emplace_back(stStar, 1324);
-	ebStar = AlignElementWithParent(env->addEditBox(L"", Scale(60, 72, 100, 92), true, mainGame->tabs_deck_editor.panel_for_tab2, EDITBOX_STAR));
-	ebStar->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
-	stScale = env->addStaticText(gDataManager->GetSysString(1336).data(), Scale(110, 74, 150, 94), false, false, mainGame->tabs_deck_editor.panel_for_tab2);
+	stScale = env->addStaticText(gDataManager->GetSysString(1336).data(), Scale(g + 3 * x + 2 * dx, g + y + dy, g + 4 * x + 2 * dx, g + 2 * y + dy), false, false, SubPanelFilterOptions);
 	defaultStrings.emplace_back(stScale, 1336);
-	ebScale = AlignElementWithParent(env->addEditBox(L"", Scale(150, 72, 190, 92), true, mainGame->tabs_deck_editor.panel_for_tab2, EDITBOX_SCALE));
+
+	//Dropdown para nivel e escala
+	ebStar = AlignElementWithParent(env->addEditBox(L"", Scale(g + 4 * x + 3 * dx, g, g + 4 * x + 3 * dx, g + y), true, SubPanelFilterOptions, EDITBOX_STAR));
+	ebStar->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
+	ebScale = AlignElementWithParent(env->addEditBox(L"", Scale(g + 4 * x + 3 * dx, g + y + dy, g + 4 * x + 3 * dx, g + 2 * y + dy), true, SubPanelFilterOptions, EDITBOX_SCALE));
 	ebScale->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
+
+
+	//Caixa de texto:"Alternative formats"
+	chkAnime = AlignElementWithParent(env->addCheckBox(gGameConfig->chkAnime, Scale(g + 4 * x + 3 * dx, g + 2 * y + 2 * dy, g + 5 * x + 3 * dx, g + 3 * y + 2 * dy), SubPanelFilterOptions, CHECKBOX_SHOW_ANIME, gDataManager->GetSysString(1999).data()));
+	defaultStrings.emplace_back(chkAnime, 1999);
+
+	stLimit = env->addStaticText(gDataManager->GetSysString(1315).data(), Scale(g + 4 * x + 4 * dx, g, g + 5 * x + 4 * dx, g + y), false, false, SubPanelFilterOptions);
+	defaultStrings.emplace_back(stLimit, 1315);
+	cbLimit = AlignElementWithParent(AddComboBox(env, Scale(g + 5 * x + 4 * dx, g + y, g + 6 * x + 4 * dx, g + y + dy), SubPanelFilterOptions, COMBOBOX_OTHER_FILT));
+	cbLimit->setMaxSelectionRows(10);
+	ReloadCBLimit();
 	
 	
-	btnEffectFilter = AlignElementWithParent(env->addButton(Scale(345, 28, 390, 69), mainGame->tabs_deck_editor.panel_for_tab2, BUTTON_EFFECT_FILTER, gDataManager->GetSysString(1326).data()));
+	stAttack = env->addStaticText(gDataManager->GetSysString(1322).data(), Scale(g + 6 * x + 5 * dx, g, g + 7 * x + 5 * dx, g + y), false, false, SubPanelFilterOptions);
+	defaultStrings.emplace_back(stAttack, 1322);
+	stDefense = env->addStaticText(gDataManager->GetSysString(1323).data(), Scale(g + 6 * x + 5 * dx, g + y + dy, g + 7 * x + 5 * dx, g + 2 * y + dy), false, false, SubPanelFilterOptions);
+	defaultStrings.emplace_back(stDefense, 1323);
+
+	ebAttack = AlignElementWithParent(env->addEditBox(L"", Scale(g + 7 * x + 6 * dx, g, g + 8 * x + 5 * dx, g + y), true, SubPanelFilterOptions, EDITBOX_ATTACK));
+	ebAttack->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
+	ebDefense = AlignElementWithParent(env->addEditBox(L"", Scale(g + 7 * x + 6 * dx, g + y + dy, g + 8 * x + 5 * dx, g + 2 * y + dy), true, SubPanelFilterOptions, EDITBOX_DEFENSE));
+	ebDefense->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
+	
+	
+	
+	btnEffectFilter = AlignElementWithParent(env->addButton(Scale(g + 8 * x + 6 * dx, g, g + 8 * x + 7 * dx, g + y), SubPanelFilterOptions, BUTTON_EFFECT_FILTER, gDataManager->GetSysString(1326).data()));
 	defaultStrings.emplace_back(btnEffectFilter, 1326);
 
 	//link markers
-	btnMarksFilter = AlignElementWithParent(env->addButton(Scale(155, 96, 240, 118), mainGame->tabs_deck_editor.panel_for_tab2, BUTTON_MARKS_FILTER, gDataManager->GetSysString(1374).data()));
+	btnMarksFilter = AlignElementWithParent(env->addButton(Scale(g + 8 * x + 6 * dx, g + y + dy, g + 8 * x + 7 * dx, g + 2 * y + dy), SubPanelFilterOptions, BUTTON_MARKS_FILTER, gDataManager->GetSysString(1374).data()));
 	defaultStrings.emplace_back(btnMarksFilter, 1374);
-	wLinkMarks = env->addWindow(Scale(700, 30, 820, 150), false, L"", mainGame->tabs_deck_editor.panel_for_tab2);
+	wLinkMarks = env->addWindow(Scale(700, 30, 820, 150), false, L"", SubPanelFilterOptions);
 	wLinkMarks->getCloseButton()->setVisible(false);
 	wLinkMarks->setDrawTitlebar(false);
 	wLinkMarks->setDraggable(false);
@@ -794,7 +819,7 @@ void Game::Initialize() {
 		btnMark[i]->setIsPushButton(true);
 
 	//search by the categories field in the cdb
-	wCategories = env->addWindow(Scale(350, 60, 900, 270), false, L"", mainGame->tabs_deck_editor.panel_for_tab2);
+	wCategories = env->addWindow(Scale(350, 60, 900, 270), false, L"", SubPanelFilterOptions);
 	wCategories->getCloseButton()->setVisible(false);
 	wCategories->setDrawTitlebar(false);
 	wCategories->setDraggable(false);
@@ -808,15 +833,15 @@ void Game::Initialize() {
 
 	//Opções na tab de Search options:
 	auto SubPanelSearchOptions = mainGame->tabs_deck_editor.panel_for_tab3->getSubpanel();
-	stSearch = env->addStaticText(gDataManager->GetSysString(1325).data(), Scale(gap, gap, gap+width, gap+height), false, false, SubPanelSearchOptions);
+	stSearch = env->addStaticText(gDataManager->GetSysString(1325).data(), Scale(g, g, g + x, g + y), false, false, SubPanelSearchOptions);
 	defaultStrings.emplace_back(stSearch, 1325);
 
-	ebCardName = env->addEditBox(L"", Scale(gap+width+dx, gap, gap + 3*width + dx, gap+height), true, SubPanelSearchOptions, EDITBOX_KEYWORD);
+	ebCardName = env->addEditBox(L"", Scale(g, g, g + x, g + y), true, SubPanelSearchOptions, EDITBOX_KEYWORD);
 	ebCardName->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
 
-	btnStartFilter = env->addButton(Scale(gap, gap+height+dy, gap + width, gap + 2*height+dy), SubPanelSearchOptions, BUTTON_START_FILTER, gDataManager->GetSysString(1327).data());
+	btnStartFilter = env->addButton(Scale(g, g, g + x, g + y), SubPanelSearchOptions, BUTTON_START_FILTER, gDataManager->GetSysString(1327).data());
 	defaultStrings.emplace_back(btnStartFilter, 1327);
-	btnClearFilter = env->addButton(Scale(gap + width + dx, gap+height+dy, gap + 2*width+dx, gap + 2*height +dy), SubPanelSearchOptions, BUTTON_CLEAR_FILTER, gDataManager->GetSysString(1304).data());
+	btnClearFilter = env->addButton(Scale(g, g, g + x, g + y), SubPanelSearchOptions, BUTTON_CLEAR_FILTER, gDataManager->GetSysString(1304).data());
 	defaultStrings.emplace_back(btnClearFilter, 1304);
 
 	
@@ -3773,20 +3798,20 @@ void Game::OnResize() {
 	//tabs_deck_editor.w_ControlTabPanel->setRelativePosition(ResizeWin(309, 8, 1020, 130)); nao funcionou
 	wCategories->setRelativePosition(ResizeWin(450, 60, 1000, 270));
 	wLinkMarks->setRelativePosition(ResizeWin(700, 30, 820, 150));
-	//stBanlist->setRelativePosition(ResizeWin(gap, gap, gap+width, gap+height));
-	stBanlist->setRelativePosition(ResizeWin(10, 9, 100, 29));
+	stBanlist->setRelativePosition(ResizeWin(gap, gap, gap+width, gap+height));
+	//stBanlist->setRelativePosition(ResizeWin(10, 9, 100, 29));
 	//stDeck->setRelativePosition(ResizeWin(10, 39, 100, 59));
 	stDeck->setRelativePosition(ResizeWin(gap, gap+height+dy, gap + width+dx, gap + 2*height+dy));
-	stCategory->setRelativePosition(ResizeWin(10, 5, 70, 25));
-	stLimit->setRelativePosition(ResizeWin(205, 5, 280, 25));
-	stAttribute->setRelativePosition(ResizeWin(10, 28, 70, 48));
-	stRace->setRelativePosition(ResizeWin(10, 51, 70, 71));
-	stAttack->setRelativePosition(ResizeWin(205, 28, 280, 48));
-	stDefense->setRelativePosition(ResizeWin(205, 51, 280, 71));
-	stStar->setRelativePosition(ResizeWin(10, 74, 80, 94));
+	//stCategory->setRelativePosition(ResizeWin(10, 5, 70, 25));
+	//stLimit->setRelativePosition(ResizeWin(205, 5, 280, 25));
+	//stAttribute->setRelativePosition(ResizeWin(10, 28, 70, 48));
+	//stRace->setRelativePosition(ResizeWin(10, 51, 70, 71));
+	//stAttack->setRelativePosition(ResizeWin(205, 28, 280, 48));
+	//stDefense->setRelativePosition(ResizeWin(205, 51, 280, 71));
+	//stStar->setRelativePosition(ResizeWin(10, 74, 80, 94));
 	//stSearch->setRelativePosition(ResizeWin(5, 74, 280, 94));
 	stSearch->setRelativePosition(ResizeWin(gap, gap, gap+width, gap+height));
-	stScale->setRelativePosition(ResizeWin(110, 74, 150, 94));
+	//stScale->setRelativePosition(ResizeWin(110, 74, 150, 94));
 
 	wLanWindow->setRelativePosition(ResizeWin(220, 100, 800, 520));
 	SetCentered(wCreateHost, false);
