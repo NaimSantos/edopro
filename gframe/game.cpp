@@ -762,7 +762,10 @@ void Game::Initialize() {
 	defaultStrings.emplace_back(stStar, 1324);
 	stScale = env->addStaticText(gDataManager->GetSysString(1336).data(), Scale(225, 30, 295, 55), false, false, SubPanelFilterOptions);
 	defaultStrings.emplace_back(stScale, 1336);
-	btnMarksFilter = AlignElementWithParent(env->addButton(Scale(225, 60, 370, 84), SubPanelFilterOptions, BUTTON_MARKS_FILTER, gDataManager->GetSysString(1374).data()));
+
+	btnMarksFilter = AlignElementWithParent(env->addButton(Scale(520, 30, 590, 55), SubPanelFilterOptions, BUTTON_MARKS_FILTER, gDataManager->GetSysString(1374).data()));
+	//original
+	// btnMarksFilter = AlignElementWithParent(env->addButton(Scale(225, 60, 370, 84), SubPanelFilterOptions, BUTTON_MARKS_FILTER, gDataManager->GetSysString(1374).data()));
 
 	// Dropdowns and buttons next to the three elements above:
 	ebStar = AlignElementWithParent(env->addEditBox(L"", Scale(300, 5, 370, 25), true, SubPanelFilterOptions, EDITBOX_STAR));
@@ -772,7 +775,9 @@ void Game::Initialize() {
 
 
 	//Check box for "Alternative formats". This is being defined here because ReloadCBLimit uses it.
-	chkAnime = AlignElementWithParent(env->addCheckBox(gGameConfig->chkAnime, Scale(520, 30, 660, 55), SubPanelFilterOptions, CHECKBOX_SHOW_ANIME, gDataManager->GetSysString(1999).data()));
+	chkAnime = AlignElementWithParent(env->addCheckBox(gGameConfig->chkAnime, Scale(225, 60, 370, 84), SubPanelFilterOptions, CHECKBOX_SHOW_ANIME, gDataManager->GetSysString(1999).data()));
+	//original:
+	// chkAnime = AlignElementWithParent(env->addCheckBox(gGameConfig->chkAnime, Scale(520, 30, 660, 55), SubPanelFilterOptions, CHECKBOX_SHOW_ANIME, gDataManager->GetSysString(1999).data()));
 	defaultStrings.emplace_back(chkAnime, 1999);
 
 	// text for "Limit" and dropdown button next to it:
@@ -799,12 +804,12 @@ void Game::Initialize() {
 	defaultStrings.emplace_back(btnEffectFilter, 1326);
 
 	// button to open a panel with advanced/complex/compound filtering options:
-	btnAdvancedFilters = AlignElementWithParent(env->addButton(Scale(595, 5, 700, 80), SubPanelFilterOptions, BUTTON_ADVANCED_FILTER, gDataManager->GetSysString(1715).data()));
+	btnAdvancedFilters = AlignElementWithParent(env->addButton(Scale(600, 5, 700, 80), SubPanelFilterOptions, BUTTON_ADVANCED_FILTER, gDataManager->GetSysString(1715).data()));
 	defaultStrings.emplace_back(btnAdvancedFilters, 1715);
 	{
 		//Criando em um novo painel
-		windowAdvancedFilter = env->addWindow(Scale(300, 80, 900, 680), false, L""); //esse painel tem 600 de comprimento por 00 de altura
-		windowAdvancedFilter->getCloseButton()->setVisible(true);
+		windowAdvancedFilter = env->addWindow(Scale(300, 80, 900, 680), false, L""); //esse painel tem 600 de comprimento por 600 de altura
+		windowAdvancedFilter->getCloseButton()->setVisible(false);
 		windowAdvancedFilter->setDrawTitlebar(false);
 		windowAdvancedFilter->setDraggable(true);
 		windowAdvancedFilter->setVisible(false);
@@ -847,42 +852,57 @@ void Game::Initialize() {
 		}
 
 		// For the attributes:
-		text_adv_attribute = env->addStaticText(gDataManager->GetSysString(1719).data(), Scale(10, 335, 300, 355), false, false, crPanel);
+		text_adv_attribute = env->addStaticText(gDataManager->GetSysString(1719).data(), Scale(10, 315, 300, 335), false, false, crPanel);
 		defaultStrings.emplace_back(text_adv_attribute, 1719);
 		for (int i = 0; i < 7; ++i) {
-			advchk_attribute[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 350 + (i / 3) * 25, 200 + (i % 3) * 200, 390 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1010 + i).data());
+			advchk_attribute[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 330 + (i / 3) * 25, 200 + (i % 3) * 200, 370 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1010 + i).data());
 			defaultStrings.emplace_back(advchk_attribute[i], 1010 + i);
 		}
 		// Monster Types:
-		text_adv_monstertype = env->addStaticText(gDataManager->GetSysString(1720).data(), Scale(10, 470, 300, 495), false, false, crPanel);
+		text_adv_monstertype = env->addStaticText(gDataManager->GetSysString(1720).data(), Scale(10, 450, 300, 475), false, false, crPanel);
 		defaultStrings.emplace_back(text_adv_monstertype, 1720);
 		//Os tipos entre Warrior e Omega Psychic estão na range 1020-1049
 		for (int i = 0; i < 30; ++i) {
-			advchk_monstertype[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 495 + (i / 3) * 25, 200 + (i % 3) * 200, 520 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1020 + i).data());
+			advchk_monstertype[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 475 + (i / 3) * 25, 200 + (i % 3) * 200, 500 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1020 + i).data());
 			defaultStrings.emplace_back(advchk_monstertype[i], 1020 + i);
 		}
-		//(410, 575) → (600, 645)
-
 		// E também os tipos nas strings 2500 Celestial Warrior, 2501 Galaxy e 2532 Yokai
-		advchk_monstertype[30] = env->addCheckBox(false, Scale(10, 770, 200, 795), crPanel, -1, gDataManager->GetSysString(2500).data());
+		advchk_monstertype[30] = env->addCheckBox(false, Scale(10, 750, 200, 775), crPanel, -1, gDataManager->GetSysString(2500).data());
 		defaultStrings.emplace_back(advchk_monstertype[30], 2500);
-		advchk_monstertype[31] = env->addCheckBox(false, Scale(210, 770, 400, 795), crPanel, -1, gDataManager->GetSysString(2501).data());
+		advchk_monstertype[31] = env->addCheckBox(false, Scale(210, 750, 400, 775), crPanel, -1, gDataManager->GetSysString(2501).data());
 		defaultStrings.emplace_back(advchk_monstertype[31], 2501);
-		advchk_monstertype[32] = env->addCheckBox(false, Scale(410, 770, 590, 795), crPanel, -1, gDataManager->GetSysString(2532).data());
+		advchk_monstertype[32] = env->addCheckBox(false, Scale(410, 750, 590, 775), crPanel, -1, gDataManager->GetSysString(2532).data());
 		defaultStrings.emplace_back(advchk_monstertype[32], 2532);
 
-		// Limitation:
-		//text_adv_limitation = env->addStaticText(gDataManager->GetSysString(1726).data(), Scale(10, 815, 300, 840), false, false, crPanel);
-		//defaultStrings.emplace_back(text_adv_limitation, 1726);
-		//Banned, limited, semi-limited
-		/*
-		/for (int i = 0; i < 3; ++i) {
-			advchk_limitation[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 840 + (i / 3) * 25, 200 + (i % 3) * 200, 865 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1316 + i).data());
+		// Limitation: Banned, limited, semi-limited
+		text_adv_limitation = env->addStaticText(gDataManager->GetSysString(1726).data(), Scale(10, 800, 300, 815), false, false, crPanel);
+		defaultStrings.emplace_back(text_adv_limitation, 1726);
+		for (int i = 0; i < 3; ++i) {
+			advchk_limitation[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 815 + (i / 3) * 25, 200 + (i % 3) * 200, 845 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1316 + i).data());
 			defaultStrings.emplace_back(advchk_limitation[i], 1316 + i);
 		}
-		advchk_limitation[3] = env->addCheckBox(false, Scale(10, 870, 200, 895), crPanel, -1, gDataManager->GetSysString(1320).data());
+		advchk_limitation[3] = env->addCheckBox(false, Scale(10, 845, 200, 880), crPanel, -1, gDataManager->GetSysString(1320).data());
 		defaultStrings.emplace_back(advchk_limitation[3], 1320);
-		*/
+		//For the Regions/OT, availability:
+		text_adv_availability = env->addStaticText(gDataManager->GetSysString(1727).data(), Scale(10, 900, 300, 915), false, false, crPanel);
+		defaultStrings.emplace_back(text_adv_availability, 1727);
+		for (int i = 0; i < 3; ++i) {//strings from 1900 to 1902
+			advchk_availability[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 915 + (i / 3) * 25, 200 + (i % 3) * 200, 945 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1900 + i).data());
+			defaultStrings.emplace_back(advchk_availability[i], 1900 + i);
+		}
+		for (int i = 3; i < 7; ++i) {//strings from 1265 to 1268
+			advchk_availability[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 915 + (i / 3) * 25, 200 + (i % 3) * 200, 945 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1262 + i).data());
+			defaultStrings.emplace_back(advchk_availability[i], 1262 + i);
+		}
+		//strings 1910, 1903, 1911 and 1912
+		advchk_availability[7] = env->addCheckBox(false, Scale(210, 975, 400, 995), crPanel, -1, gDataManager->GetSysString(1910).data());
+		defaultStrings.emplace_back(advchk_availability[7], 1910);
+		advchk_availability[8] = env->addCheckBox(false, Scale(410, 975, 600, 995), crPanel, -1, gDataManager->GetSysString(1903).data());
+		defaultStrings.emplace_back(advchk_availability[8], 1903);
+		advchk_availability[9] = env->addCheckBox(false, Scale(10, 1000, 200, 1020), crPanel, -1, gDataManager->GetSysString(1911).data());
+		defaultStrings.emplace_back(advchk_availability[9], 1911);
+		advchk_availability[10] = env->addCheckBox(false, Scale(210, 1000, 400, 1020), crPanel, -1, gDataManager->GetSysString(1912).data());
+		defaultStrings.emplace_back(advchk_availability[10], 1912);
 	}
 	// To be added: Region based OT Limited, semi-limited, Banned, Unlimited
 

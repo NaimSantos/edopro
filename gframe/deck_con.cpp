@@ -163,7 +163,9 @@ void DeckBuilder::PrepareAdvancedFilters() {
 		if (mainGame->advchk_cardtype[i]->isChecked())
 			adv_query.type |= (1u << (i+offset));
 	}
-
+	//TODO: implement the logic for attributes
+	//TODO: implement the logic for OT/availability (there are fields to skip)
+	//TODO: implement the logic for limitations
 }
 void DeckBuilder::ClearAdvancedFilters() {
 	for (int i = 0; i < 27; ++i) {
@@ -175,11 +177,17 @@ void DeckBuilder::ClearAdvancedFilters() {
 	for (int i = 0; i < 33; i++) {
 		mainGame->advchk_monstertype[i]->setChecked(false);
 	}
+	for (int i = 0; i < 4; i++) {
+		mainGame->advchk_limitation[i]->setChecked(false);
+	}
+	for (int i = 0; i < 11; i++) {
+		mainGame->advchk_availability[i]->setChecked(false);
+	}
 	adv_query.type = 0;
 	adv_query.attribute = 0;
 	adv_query.race = 0;
-	adv_query.ot = 0;
 	adv_query.limitation = 0;
+	adv_query.ot = 0;
 }
 void DeckBuilder::ExportDeckToClipboard(bool plain_text) {
 	auto deck_string = plain_text ? DeckManager::ExportDeckCardNames(current_deck) : DeckManager::ExportDeckYdke(current_deck);
