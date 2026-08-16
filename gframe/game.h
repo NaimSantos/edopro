@@ -387,15 +387,23 @@ struct deck_edit_page_elements {
 	irr::gui::IGUIButton* btnAdvancedFilters_OK;
 	irr::gui::IGUIButton* btnAdvancedFilters_CLEAR;
 
-	irr::gui::IGUICheckBox* advchk_cardtype[28];
+	irr::gui::IGUICheckBox* advchk_cardtype[27];
 	irr::gui::IGUIStaticText* text_adv_cardtype;
-
 	irr::gui::IGUICheckBox* advchk_attribute[7];
 	irr::gui::IGUIStaticText* text_adv_attribute;
-
 	irr::gui::IGUICheckBox* advchk_monstertype[33];
 	irr::gui::IGUIStaticText* text_adv_monstertype;
 
+	//irr::gui::IGUICheckBox* advchk_limitation[4];
+	//irr::gui::IGUIStaticText* text_adv_limitation;
+
+	/*
+	irr::gui::IGUICheckBox* advchk_limitation[4];
+	irr::gui::IGUIStaticText* text_adv_limitation;
+
+	irr::gui::IGUICheckBox* advchk_availability[11];
+	irr::gui::IGUIStaticText* text_adv_availability;
+	*/
 	deck_editor_control_tab tabs_deck_editor;
 
 	//sort type

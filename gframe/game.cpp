@@ -803,72 +803,88 @@ void Game::Initialize() {
 	defaultStrings.emplace_back(btnAdvancedFilters, 1715);
 	{
 		//Criando em um novo painel
-		windowAdvancedFilter = env->addWindow(Scale(400, 100, 1000, 800), false, L""); //esse painel tem 600 de comprimento por 700 de altura
+		windowAdvancedFilter = env->addWindow(Scale(300, 80, 900, 680), false, L""); //esse painel tem 600 de comprimento por 00 de altura
 		windowAdvancedFilter->getCloseButton()->setVisible(true);
 		windowAdvancedFilter->setDrawTitlebar(false);
 		windowAdvancedFilter->setDraggable(true);
 		windowAdvancedFilter->setVisible(false);
-
 		
 		const auto windowsize = windowAdvancedFilter->getClientRect().getSize();
-		const int buttonAreaTop = windowsize.Height - Scale(50);
+		const int buttonAreaTop = windowsize.Height - Scale(60);
 		// A scrollbar inside the above window
 		auto tmpPanel = irr::gui::Panel::addPanel(env, windowAdvancedFilter, -1, { {}, irr::core::dimension2du(windowsize.Width,buttonAreaTop) }, true, false); //the  'true' here enables the scrollbar
 		auto crPanel = tmpPanel->getSubpanel();
-		crPanel->setRelativePosition(irr::core::recti(0, 0, windowsize.Width, Scale(1200)));
+		crPanel->setRelativePosition(irr::core::recti(0, 0, windowsize.Width, windowsize.Height));
 
-		btnAdvancedFilters_CLEAR = env->addButton(irr::core::recti(
-			Scale(100),
-			buttonAreaTop + Scale(10),
-			Scale(200),
-			buttonAreaTop + Scale(40)
-		), windowAdvancedFilter, BUTTON_ADVANCED_FILTER_CLEAR, gDataManager->GetSysString(1716).data());
+		btnAdvancedFilters_CLEAR = env->addButton(irr::core::recti(Scale(100), buttonAreaTop + Scale(10), Scale(200),buttonAreaTop + Scale(40)), windowAdvancedFilter, BUTTON_ADVANCED_FILTER_CLEAR, gDataManager->GetSysString(1716).data());
 		defaultStrings.emplace_back(btnAdvancedFilters_CLEAR, 1716);
-		btnAdvancedFilters_OK = env->addButton(irr::core::recti(
-			Scale(300),
-			buttonAreaTop + Scale(10),
-			Scale(400),
-			buttonAreaTop + Scale(40)
+		btnAdvancedFilters_OK = env->addButton(irr::core::recti(Scale(300), buttonAreaTop + Scale(10), Scale(400),buttonAreaTop + Scale(40)
 		), windowAdvancedFilter, BUTTON_ADVANCED_FILTER_OK, gDataManager->GetSysString(1717).data());
 		defaultStrings.emplace_back(btnAdvancedFilters_OK, 1717);
 
 		// For the main card types:
 		text_adv_cardtype = env->addStaticText(gDataManager->GetSysString(1718).data(), Scale(10, 10, 300, 30), false, false, crPanel);
 		defaultStrings.emplace_back(text_adv_cardtype, 1718);
-		for (int i = 0; i < 3; ++i) {
-			advchk_cardtype[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 35 + (i / 3) * 20, 200 + (i % 3) * 200, 65 + (i / 3) * 25), crPanel, -1, gDataManager->GetSysString(1050 + i).data());
-			defaultStrings.emplace_back(advchk_cardtype[i], 1050 + i);
+		//There are 27 unique card types
+		for (int i = 0; i < 27 ; ++i) {
+			// Strings 1050, 1051 and 1052
+			if (i < 3) {
+				advchk_cardtype[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 35 + (i / 3) * 25, 200 + (i % 3) * 200, 65 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1050 + i).data());
+				defaultStrings.emplace_back(advchk_cardtype[i], 1050 + i);
+			}
+			// Strings 1054 to 1057
+			else if(i>= 3 && i <7)
+			{
+				//started at 1051 to account for the missing 1053
+				advchk_cardtype[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 35 + (i / 3) * 25, 200 + (i % 3) * 200, 65 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1050 + i).data());
+				defaultStrings.emplace_back(advchk_cardtype[i], 1051 + i);
+			}
+			else {
+				//started at 1052 to accpunt for the missing 1053 AND 1058
+				advchk_cardtype[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 35 + (i / 3) * 25, 200 + (i % 3) * 200, 65 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1052 + i).data());
+				defaultStrings.emplace_back(advchk_cardtype[i], 1052 + i);
+			}
 		}
-		for (int i = 3; i < 28; ++i) {
-			advchk_cardtype[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 35 + (i / 3) * 20, 200 + (i % 3) * 200, 65 + (i / 3) * 25), crPanel, -1, gDataManager->GetSysString(1050 + i).data());
-			defaultStrings.emplace_back(advchk_cardtype[i], 1051 + i);
-		}
+
 		// For the attributes:
-		text_adv_attribute = env->addStaticText(gDataManager->GetSysString(1719).data(), Scale(10, 275, 300, 310), false, false, crPanel);
+		text_adv_attribute = env->addStaticText(gDataManager->GetSysString(1719).data(), Scale(10, 335, 300, 355), false, false, crPanel);
 		defaultStrings.emplace_back(text_adv_attribute, 1719);
 		for (int i = 0; i < 7; ++i) {
-			advchk_attribute[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 290 + (i / 3) * 20, 200 + (i % 3) * 200, 330 + (i / 3) * 25), crPanel, -1, gDataManager->GetSysString(1010 + i).data());
+			advchk_attribute[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 350 + (i / 3) * 25, 200 + (i % 3) * 200, 390 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1010 + i).data());
 			defaultStrings.emplace_back(advchk_attribute[i], 1010 + i);
 		}
 		// Monster Types:
-		text_adv_monstertype = env->addStaticText(gDataManager->GetSysString(1720).data(), Scale(10, 375, 300, 400), false, false, crPanel);
+		text_adv_monstertype = env->addStaticText(gDataManager->GetSysString(1720).data(), Scale(10, 470, 300, 495), false, false, crPanel);
 		defaultStrings.emplace_back(text_adv_monstertype, 1720);
 		//Os tipos entre Warrior e Omega Psychic estão na range 1020-1049
 		for (int i = 0; i < 30; ++i) {
-			advchk_monstertype[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 395 + (i / 3) * 20, 200 + (i % 3) * 200, 420 + (i / 3) * 25), crPanel, -1, gDataManager->GetSysString(1020 + i).data());
+			advchk_monstertype[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 495 + (i / 3) * 25, 200 + (i % 3) * 200, 520 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1020 + i).data());
 			defaultStrings.emplace_back(advchk_monstertype[i], 1020 + i);
 		}
 		//(410, 575) → (600, 645)
 
 		// E também os tipos nas strings 2500 Celestial Warrior, 2501 Galaxy e 2532 Yokai
-		advchk_monstertype[30] = env->addCheckBox(false, Scale(10, 650, 200, 275), crPanel, -1, gDataManager->GetSysString(2500).data());
+		advchk_monstertype[30] = env->addCheckBox(false, Scale(10, 770, 200, 795), crPanel, -1, gDataManager->GetSysString(2500).data());
 		defaultStrings.emplace_back(advchk_monstertype[30], 2500);
-		advchk_monstertype[31] = env->addCheckBox(false, Scale(210, 650, 400, 275), crPanel, -1, gDataManager->GetSysString(2501).data());
+		advchk_monstertype[31] = env->addCheckBox(false, Scale(210, 770, 400, 795), crPanel, -1, gDataManager->GetSysString(2501).data());
 		defaultStrings.emplace_back(advchk_monstertype[31], 2501);
-		advchk_monstertype[32] = env->addCheckBox(false, Scale(410, 650, 590, 275), crPanel, -1, gDataManager->GetSysString(2532).data());
+		advchk_monstertype[32] = env->addCheckBox(false, Scale(410, 770, 590, 795), crPanel, -1, gDataManager->GetSysString(2532).data());
 		defaultStrings.emplace_back(advchk_monstertype[32], 2532);
+
+		// Limitation:
+		//text_adv_limitation = env->addStaticText(gDataManager->GetSysString(1726).data(), Scale(10, 815, 300, 840), false, false, crPanel);
+		//defaultStrings.emplace_back(text_adv_limitation, 1726);
+		//Banned, limited, semi-limited
+		/*
+		/for (int i = 0; i < 3; ++i) {
+			advchk_limitation[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 840 + (i / 3) * 25, 200 + (i % 3) * 200, 865 + (i / 3) * 30), crPanel, -1, gDataManager->GetSysString(1316 + i).data());
+			defaultStrings.emplace_back(advchk_limitation[i], 1316 + i);
+		}
+		advchk_limitation[3] = env->addCheckBox(false, Scale(10, 870, 200, 895), crPanel, -1, gDataManager->GetSysString(1320).data());
+		defaultStrings.emplace_back(advchk_limitation[3], 1320);
+		*/
 	}
-	// To be added: Limited, semi-limited, Banned, Unlimited
+	// To be added: Region based OT Limited, semi-limited, Banned, Unlimited
 
 
 

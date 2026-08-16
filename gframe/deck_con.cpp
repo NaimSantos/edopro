@@ -147,6 +147,40 @@ void DeckBuilder::ImportDeck() {
 		RefreshLimitationStatus();
 	}
 }
+void DeckBuilder::PrepareAdvancedFilters() {
+	adv_query.race = 0;
+	for (int i = 0; i < 32; ++i)
+		if (mainGame->advchk_monstertype[i]->isChecked())
+			adv_query.race |= ((1LL) << i);
+
+	adv_query.type = 0;
+	int offset = 0;
+	for (int i = 0; i < 27; ++i) {
+		if (i >= 3)
+			offset = 1;
+		if (i >= 8)
+			offset = 2;
+		if (mainGame->advchk_cardtype[i]->isChecked())
+			adv_query.type |= (1u << (i+offset));
+	}
+
+}
+void DeckBuilder::ClearAdvancedFilters() {
+	for (int i = 0; i < 27; ++i) {
+		mainGame->advchk_cardtype[i]->setChecked(false);
+	}
+	for (int i = 0; i < 7; i++) {
+		mainGame->advchk_attribute[i]->setChecked(false);
+	}
+	for (int i = 0; i < 33; i++) {
+		mainGame->advchk_monstertype[i]->setChecked(false);
+	}
+	adv_query.type = 0;
+	adv_query.attribute = 0;
+	adv_query.race = 0;
+	adv_query.ot = 0;
+	adv_query.limitation = 0;
+}
 void DeckBuilder::ExportDeckToClipboard(bool plain_text) {
 	auto deck_string = plain_text ? DeckManager::ExportDeckCardNames(current_deck) : DeckManager::ExportDeckYdke(current_deck);
 	if(!deck_string.empty()) {
@@ -166,8 +200,9 @@ bool DeckBuilder::OnEvent(const irr::SEvent& event) {
 		int id = event.GUIEvent.Caller->getID();
 		if(mainGame->wCategories->isVisible() && id != BUTTON_CATEGORY_OK)
 			break;
-		if (mainGame->windowAdvancedFilter->isVisible() && id != BUTTON_ADVANCED_FILTER_OK)
+		if (mainGame->windowAdvancedFilter->isVisible() && id != BUTTON_ADVANCED_FILTER_OK && id != BUTTON_ADVANCED_FILTER_CLEAR) {
 			break;
+		}
 		if(mainGame->wQuery->isVisible() && id != BUTTON_YES && id != BUTTON_NO)
 			break;
 		if(mainGame->wLinkMarks->isVisible() && id != BUTTON_MARKERS_OK)
@@ -362,7 +397,12 @@ bool DeckBuilder::OnEvent(const irr::SEvent& event) {
 				break;
 			}
 			case BUTTON_ADVANCED_FILTER_OK: {
+				PrepareAdvancedFilters();
 				mainGame->HideElement(mainGame->windowAdvancedFilter);
+				break;
+			}
+			case BUTTON_ADVANCED_FILTER_CLEAR: {
+				ClearAdvancedFilters();
 				break;
 			}
 			case BUTTON_SIDE_OK: {

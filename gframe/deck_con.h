@@ -62,6 +62,14 @@ public:
 		std::vector<uint16_t> setcodes;
 		SEARCH_MODIFIER modifier;
 	};
+	struct AdvQuery {
+		uint32_t type{}; //card type
+		uint32_t attribute{};
+		long long race{};
+		uint32_t ot{};
+		uint32_t limitation{};
+	};
+
 	bool OnEvent(const irr::SEvent& event) override;
 	void Initialize(bool refresh = true);
 	void Terminate(bool showmenu = true);
@@ -81,6 +89,8 @@ private:
 	void FilterCards(bool force_refresh = false);
 	bool CheckCardProperties(const CardDataM& data);
 	bool CheckCardText(const CardDataM& data, const SearchParameter& search_parameter);
+	void PrepareAdvancedFilters();
+	void ClearAdvancedFilters();
 	void ClearFilter();
 	void ClearSearch();
 	void SortList();
@@ -123,6 +133,7 @@ private:
 	DECLARE_WITH_CACHE(uint32_t, filter_marks)
 	DECLARE_WITH_CACHE(limitation_search_filters, filter_lm)
 #undef DECLARE_WITH_CACHE
+	AdvQuery adv_query{};
 
 	irr::core::vector2di mouse_pos;
 

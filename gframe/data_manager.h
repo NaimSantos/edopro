@@ -40,12 +40,6 @@ struct OCG_CardData;
 
 namespace ygo {
 
-struct AdvQuery {
-	uint32_t type; //card type
-	uint32_t attribute;
-	uint64_t race;
-	uint32_t ot;
-};
 
 struct CardData {
 	uint32_t code;
