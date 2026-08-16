@@ -102,6 +102,7 @@ void DeckBuilder::Terminate(bool showmenu) {
 	}
 	//mainGame->wDeckEdit->setVisible(false);//removed by the new layout
 	mainGame->wCategories->setVisible(false);
+	mainGame->windowAdvancedFilter->setVisible(false);
 	//mainGame->wFilter->setVisible(false);//removed by the new layout
 	mainGame->tabs_deck_editor.w_ControlTabPanel->setVisible(false);
 	mainGame->wSort->setVisible(false);
@@ -164,6 +165,8 @@ bool DeckBuilder::OnEvent(const irr::SEvent& event) {
 	case irr::EET_GUI_EVENT: {
 		int id = event.GUIEvent.Caller->getID();
 		if(mainGame->wCategories->isVisible() && id != BUTTON_CATEGORY_OK)
+			break;
+		if (mainGame->windowAdvancedFilter->isVisible() && id != BUTTON_ADVANCED_FILTER_OK)
 			break;
 		if(mainGame->wQuery->isVisible() && id != BUTTON_YES && id != BUTTON_NO)
 			break;
@@ -337,6 +340,10 @@ bool DeckBuilder::OnEvent(const irr::SEvent& event) {
 				mainGame->PopupElement(mainGame->wCategories);
 				break;
 			}
+			case BUTTON_ADVANCED_FILTER: {
+				mainGame->PopupElement(mainGame->windowAdvancedFilter);
+				break;
+			}
 			case BUTTON_START_FILTER: {
 				StartFilter();
 				break;
@@ -352,6 +359,10 @@ bool DeckBuilder::OnEvent(const irr::SEvent& event) {
 					if(mainGame->chkCategory[i]->isChecked())
 						filter_effect |= filter;
 				mainGame->HideElement(mainGame->wCategories);
+				break;
+			}
+			case BUTTON_ADVANCED_FILTER_OK: {
+				mainGame->HideElement(mainGame->windowAdvancedFilter);
 				break;
 			}
 			case BUTTON_SIDE_OK: {

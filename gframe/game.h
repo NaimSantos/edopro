@@ -155,7 +155,7 @@ struct info_panel_elements {
 	irr::gui::IGUIButton* btnTabShowSettings;
 };
 
-struct triple_control_tab {
+struct deck_editor_control_tab {
 	irr::gui::IGUITabControl* w_ControlTabPanel;
 	irr::gui::IGUITab* tab1;
 	irr::gui::IGUITab* tab2;
@@ -165,18 +165,7 @@ struct triple_control_tab {
 	irr::gui::Panel* panel_for_tab2;
 	irr::gui::Panel* panel_for_tab3;
 };
-/*
-struct deck_editor_control_tab {
-	irr::gui::IGUITabControl* wPanel_DeckEditor;
-	irr::gui::IGUITab* tabDeckOptions;
-	irr::gui::IGUITab* tabFilterOptions;
-	irr::gui::IGUITab* tabSearchOptions;
 
-	irr::gui::Panel* panelDeckOptions;
-	irr::gui::Panel* panelFilterOptions;
-	irr::gui::Panel* panelSearchOptions;
-};
-*/
 struct main_menu_panel_elements {
 	//main menu
 	int mainMenuLeftX;
@@ -392,10 +381,23 @@ struct deck_edit_page_elements {
 	irr::gui::IGUIButton* btnMark[8];
 	irr::gui::IGUIButton* btnMarksOK;
 	irr::gui::IGUICheckBox* chkAnime;
+	
+	irr::gui::IGUIWindow* windowAdvancedFilter;
+	irr::gui::IGUIButton* btnAdvancedFilters;
+	irr::gui::IGUIButton* btnAdvancedFilters_OK;
+	irr::gui::IGUIButton* btnAdvancedFilters_CLEAR;
 
+	irr::gui::IGUICheckBox* advchk_cardtype[28];
+	irr::gui::IGUIStaticText* text_adv_cardtype;
 
-	triple_control_tab tabs_deck_editor;
-	//triple_control_tab tabs_card_types;
+	irr::gui::IGUICheckBox* advchk_attribute[7];
+	irr::gui::IGUIStaticText* text_adv_attribute;
+
+	irr::gui::IGUICheckBox* advchk_monstertype[33];
+	irr::gui::IGUIStaticText* text_adv_monstertype;
+
+	deck_editor_control_tab tabs_deck_editor;
+
 	//sort type
 	irr::gui::IGUIStaticText* wSort;
 	irr::gui::IGUIComboBox* cbSortType;

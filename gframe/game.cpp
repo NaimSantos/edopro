@@ -655,6 +655,7 @@ void Game::Initialize() {
 		tabDeckOptions = mainGame->tabs_deck_editor.w_ControlTabPanel->addTab(gDataManager->GetSysString(1728).data());
 		defaultStrings.emplace_back(tabDeckOptions, 1728);
 		tabDeckOptions->updateAbsolutePosition();
+		//The offset in getRelativePosition().getHeight() is an attempt to fix its width
 		mainGame->tabs_deck_editor.panel_for_tab1 = irr::gui::Panel::addPanel(env, tabDeckOptions, -1,
 			irr::core::recti(0,0, tabDeckOptions->getRelativePosition().getWidth(), tabDeckOptions->getRelativePosition().getHeight()), true, false);
 		mainGame->tabs_deck_editor.panel_for_tab1->setAlignment(irr::gui::EGUIA_SCALE, irr::gui::EGUIA_SCALE, irr::gui::EGUIA_SCALE, irr::gui::EGUIA_SCALE);
@@ -663,6 +664,7 @@ void Game::Initialize() {
 		auto tabFilterOptions = mainGame->tabs_deck_editor.tab2;
 		tabFilterOptions = mainGame->tabs_deck_editor.w_ControlTabPanel->addTab(gDataManager->GetSysString(1729).data());
 		defaultStrings.emplace_back(tabFilterOptions, 1729);
+		tabFilterOptions->updateAbsolutePosition();
 		mainGame->tabs_deck_editor.panel_for_tab2 = irr::gui::Panel::addPanel(env, tabFilterOptions, -1,
 			irr::core::recti(0,0, tabFilterOptions->getRelativePosition().getWidth(), tabFilterOptions->getRelativePosition().getHeight()), true, false);
 		mainGame->tabs_deck_editor.panel_for_tab2->setAlignment(irr::gui::EGUIA_SCALE, irr::gui::EGUIA_SCALE, irr::gui::EGUIA_SCALE, irr::gui::EGUIA_SCALE);
@@ -671,6 +673,7 @@ void Game::Initialize() {
 		auto tabSearchOptions = mainGame->tabs_deck_editor.tab3;
 		tabSearchOptions = mainGame->tabs_deck_editor.w_ControlTabPanel->addTab(gDataManager->GetSysString(1730).data());
 		defaultStrings.emplace_back(tabSearchOptions, 1730);
+		tabSearchOptions->updateAbsolutePosition();
 		mainGame->tabs_deck_editor.panel_for_tab3 = irr::gui::Panel::addPanel(env, tabSearchOptions, -1,
 			irr::core::recti(0, 0, tabSearchOptions->getRelativePosition().getWidth(), tabSearchOptions->getRelativePosition().getHeight()), true, false);
 		mainGame->tabs_deck_editor.panel_for_tab3->setAlignment(irr::gui::EGUIA_SCALE, irr::gui::EGUIA_SCALE, irr::gui::EGUIA_SCALE, irr::gui::EGUIA_SCALE);
@@ -699,7 +702,7 @@ void Game::Initialize() {
 	cbDBDecks = AlignElementWithParent(AddComboBox(env, Scale(75, 45, 250, 75), SubPanelDeckOptions, COMBOBOX_DBDECKS));
 	cbDBDecks->setMaxSelectionRows(15);
 
-	// "Save" button + box below it : caixa para digitar o texto do novo nome (embaixo dele):
+	// "Save" button + box below it: caixa para digitar o texto do novo nome (embaixo dele):
 	btnSaveDeck = AlignElementWithParent(env->addButton(Scale(255, 5, 325, 40), SubPanelDeckOptions, BUTTON_SAVE_DECK, gDataManager->GetSysString(1302).data()));
 	defaultStrings.emplace_back(btnSaveDeck, 1302);
 	ebDeckname = AlignElementWithParent(env->addEditBox(L"", Scale(255, 45, 325, 75), true, SubPanelDeckOptions, EDITBOX_DECK_NAME));
@@ -730,19 +733,14 @@ void Game::Initialize() {
 	btnExportText = AlignElementWithParent(env->addButton(Scale(630, 5, 700, 40), SubPanelDeckOptions, BUTTON_EXPORT_DECK_PLAINTEXT, gDataManager->GetSysString(2087).data()));
 	defaultStrings.emplace_back(btnExportText, 2087);
 
-
-	//mainGame->tabs_deck_editor.panel_for_tab1->updateAbsolutePosition();
-
-
-
-	// To draw the buttons and text for the "Filtering options" tab
+	// To draw the buttons and text for the "FILTERING OPTIONS" tab
 	auto SubPanelFilterOptions = mainGame->tabs_deck_editor.panel_for_tab2->getSubpanel();
 	// texts for  "Category", "Atributes" and "Type" (monster type):
 	stCategory = env->addStaticText(gDataManager->GetSysString(1311).data(), Scale(5, 5, 75, 25), false, false, SubPanelFilterOptions);
 	defaultStrings.emplace_back(stCategory, 1311);
 	stAttribute = env->addStaticText(gDataManager->GetSysString(1319).data(), Scale(5, 30, 75, 55), false, false, SubPanelFilterOptions);
 	defaultStrings.emplace_back(stAttribute, 1319);
-	stRace = env->addStaticText(gDataManager->GetSysString(1321).data(), Scale(5, 60, 75, 85), false, false, SubPanelFilterOptions);
+	stRace = env->addStaticText(gDataManager->GetSysString(1321).data(), Scale(5, 60, 75, 84), false, false, SubPanelFilterOptions);
 	defaultStrings.emplace_back(stRace, 1321);
 
 	//Dropdown menus next to "Category":
@@ -755,7 +753,7 @@ void Game::Initialize() {
 	cbAttribute = AlignElementWithParent(AddComboBox(env, Scale(80, 30, 220, 55), SubPanelFilterOptions, COMBOBOX_OTHER_FILT));
 	cbAttribute->setMaxSelectionRows(10);
 	ReloadCBAttribute();
-	cbRace = AlignElementWithParent(AddComboBox(env, Scale(80, 60, 220, 85), SubPanelFilterOptions, COMBOBOX_OTHER_FILT));
+	cbRace = AlignElementWithParent(AddComboBox(env, Scale(80, 60, 220, 84), SubPanelFilterOptions, COMBOBOX_OTHER_FILT));
 	cbRace->setMaxSelectionRows(10);
 	ReloadCBRace();
 
@@ -764,7 +762,7 @@ void Game::Initialize() {
 	defaultStrings.emplace_back(stStar, 1324);
 	stScale = env->addStaticText(gDataManager->GetSysString(1336).data(), Scale(225, 30, 295, 55), false, false, SubPanelFilterOptions);
 	defaultStrings.emplace_back(stScale, 1336);
-	btnMarksFilter = AlignElementWithParent(env->addButton(Scale(225, 60, 370, 85), SubPanelFilterOptions, BUTTON_MARKS_FILTER, gDataManager->GetSysString(1374).data()));
+	btnMarksFilter = AlignElementWithParent(env->addButton(Scale(225, 60, 370, 84), SubPanelFilterOptions, BUTTON_MARKS_FILTER, gDataManager->GetSysString(1374).data()));
 
 	// Dropdowns and buttons next to the three elements above:
 	ebStar = AlignElementWithParent(env->addEditBox(L"", Scale(300, 5, 370, 25), true, SubPanelFilterOptions, EDITBOX_STAR));
@@ -777,40 +775,111 @@ void Game::Initialize() {
 	chkAnime = AlignElementWithParent(env->addCheckBox(gGameConfig->chkAnime, Scale(520, 30, 660, 55), SubPanelFilterOptions, CHECKBOX_SHOW_ANIME, gDataManager->GetSysString(1999).data()));
 	defaultStrings.emplace_back(chkAnime, 1999);
 
-	// text for "Limit" and dropdown next to it:
+	// text for "Limit" and dropdown button next to it:
 	stLimit = env->addStaticText(gDataManager->GetSysString(1315).data(), Scale(375, 5, 440, 25), false, false, SubPanelFilterOptions);
 	defaultStrings.emplace_back(stLimit, 1315);
 	cbLimit = AlignElementWithParent(AddComboBox(env, Scale(445, 5, 515, 25), SubPanelFilterOptions, COMBOBOX_OTHER_FILT));
 	cbLimit->setMaxSelectionRows(10);
 	ReloadCBLimit();
 
-	// Text for ATK and DEF:
+	// Text for "ATK" and "DEF":
 	stAttack = env->addStaticText(gDataManager->GetSysString(1322).data(), Scale(375, 30, 440, 55), false, false, SubPanelFilterOptions);
 	defaultStrings.emplace_back(stAttack, 1322);
-	stDefense = env->addStaticText(gDataManager->GetSysString(1323).data(), Scale(375, 60, 440, 85), false, false, SubPanelFilterOptions);
+	stDefense = env->addStaticText(gDataManager->GetSysString(1323).data(), Scale(375, 60, 440, 84), false, false, SubPanelFilterOptions);
 	defaultStrings.emplace_back(stDefense, 1323);
 
 	// text boxes next to ATK and DEF:
 	ebAttack = AlignElementWithParent(env->addEditBox(L"", Scale(445, 30, 515, 55), true, SubPanelFilterOptions, EDITBOX_ATTACK));
 	ebAttack->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
-	ebDefense = AlignElementWithParent(env->addEditBox(L"", Scale(445, 60, 515, 85), true, SubPanelFilterOptions, EDITBOX_DEFENSE));
+	ebDefense = AlignElementWithParent(env->addEditBox(L"", Scale(445, 60, 515, 84), true, SubPanelFilterOptions, EDITBOX_DEFENSE));
 	ebDefense->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
 
-	// button "Effect":
+	// button "Effect" (the categories a card has in the database):
 	btnEffectFilter = AlignElementWithParent(env->addButton(Scale(520, 5, 590, 25), SubPanelFilterOptions, BUTTON_EFFECT_FILTER, gDataManager->GetSysString(1326).data()));
 	defaultStrings.emplace_back(btnEffectFilter, 1326);
 
+	// button to open a panel with advanced/complex/compound filtering options:
+	btnAdvancedFilters = AlignElementWithParent(env->addButton(Scale(595, 5, 700, 80), SubPanelFilterOptions, BUTTON_ADVANCED_FILTER, gDataManager->GetSysString(1715).data()));
+	defaultStrings.emplace_back(btnAdvancedFilters, 1715);
+	{
+		//Criando em um novo painel
+		windowAdvancedFilter = env->addWindow(Scale(400, 100, 1000, 800), false, L""); //esse painel tem 600 de comprimento por 700 de altura
+		windowAdvancedFilter->getCloseButton()->setVisible(true);
+		windowAdvancedFilter->setDrawTitlebar(false);
+		windowAdvancedFilter->setDraggable(true);
+		windowAdvancedFilter->setVisible(false);
+
+		
+		const auto windowsize = windowAdvancedFilter->getClientRect().getSize();
+		const int buttonAreaTop = windowsize.Height - Scale(50);
+		// A scrollbar inside the above window
+		auto tmpPanel = irr::gui::Panel::addPanel(env, windowAdvancedFilter, -1, { {}, irr::core::dimension2du(windowsize.Width,buttonAreaTop) }, true, false); //the  'true' here enables the scrollbar
+		auto crPanel = tmpPanel->getSubpanel();
+		crPanel->setRelativePosition(irr::core::recti(0, 0, windowsize.Width, Scale(1200)));
+
+		btnAdvancedFilters_CLEAR = env->addButton(irr::core::recti(
+			Scale(100),
+			buttonAreaTop + Scale(10),
+			Scale(200),
+			buttonAreaTop + Scale(40)
+		), windowAdvancedFilter, BUTTON_ADVANCED_FILTER_CLEAR, gDataManager->GetSysString(1716).data());
+		defaultStrings.emplace_back(btnAdvancedFilters_CLEAR, 1716);
+		btnAdvancedFilters_OK = env->addButton(irr::core::recti(
+			Scale(300),
+			buttonAreaTop + Scale(10),
+			Scale(400),
+			buttonAreaTop + Scale(40)
+		), windowAdvancedFilter, BUTTON_ADVANCED_FILTER_OK, gDataManager->GetSysString(1717).data());
+		defaultStrings.emplace_back(btnAdvancedFilters_OK, 1717);
+
+		// For the main card types:
+		text_adv_cardtype = env->addStaticText(gDataManager->GetSysString(1718).data(), Scale(10, 10, 300, 30), false, false, crPanel);
+		defaultStrings.emplace_back(text_adv_cardtype, 1718);
+		for (int i = 0; i < 3; ++i) {
+			advchk_cardtype[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 35 + (i / 3) * 20, 200 + (i % 3) * 200, 65 + (i / 3) * 25), crPanel, -1, gDataManager->GetSysString(1050 + i).data());
+			defaultStrings.emplace_back(advchk_cardtype[i], 1050 + i);
+		}
+		for (int i = 3; i < 28; ++i) {
+			advchk_cardtype[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 35 + (i / 3) * 20, 200 + (i % 3) * 200, 65 + (i / 3) * 25), crPanel, -1, gDataManager->GetSysString(1050 + i).data());
+			defaultStrings.emplace_back(advchk_cardtype[i], 1051 + i);
+		}
+		// For the attributes:
+		text_adv_attribute = env->addStaticText(gDataManager->GetSysString(1719).data(), Scale(10, 275, 300, 310), false, false, crPanel);
+		defaultStrings.emplace_back(text_adv_attribute, 1719);
+		for (int i = 0; i < 7; ++i) {
+			advchk_attribute[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 290 + (i / 3) * 20, 200 + (i % 3) * 200, 330 + (i / 3) * 25), crPanel, -1, gDataManager->GetSysString(1010 + i).data());
+			defaultStrings.emplace_back(advchk_attribute[i], 1010 + i);
+		}
+		// Monster Types:
+		text_adv_monstertype = env->addStaticText(gDataManager->GetSysString(1720).data(), Scale(10, 375, 300, 400), false, false, crPanel);
+		defaultStrings.emplace_back(text_adv_monstertype, 1720);
+		//Os tipos entre Warrior e Omega Psychic estão na range 1020-1049
+		for (int i = 0; i < 30; ++i) {
+			advchk_monstertype[i] = env->addCheckBox(false, Scale(10 + (i % 3) * 200, 395 + (i / 3) * 20, 200 + (i % 3) * 200, 420 + (i / 3) * 25), crPanel, -1, gDataManager->GetSysString(1020 + i).data());
+			defaultStrings.emplace_back(advchk_monstertype[i], 1020 + i);
+		}
+		//(410, 575) → (600, 645)
+
+		// E também os tipos nas strings 2500 Celestial Warrior, 2501 Galaxy e 2532 Yokai
+		advchk_monstertype[30] = env->addCheckBox(false, Scale(10, 650, 200, 275), crPanel, -1, gDataManager->GetSysString(2500).data());
+		defaultStrings.emplace_back(advchk_monstertype[30], 2500);
+		advchk_monstertype[31] = env->addCheckBox(false, Scale(210, 650, 400, 275), crPanel, -1, gDataManager->GetSysString(2501).data());
+		defaultStrings.emplace_back(advchk_monstertype[31], 2501);
+		advchk_monstertype[32] = env->addCheckBox(false, Scale(410, 650, 590, 275), crPanel, -1, gDataManager->GetSysString(2532).data());
+		defaultStrings.emplace_back(advchk_monstertype[32], 2532);
+	}
+	// To be added: Limited, semi-limited, Banned, Unlimited
 
 
-	
 
-	//link markers
+	// link markers
 	defaultStrings.emplace_back(btnMarksFilter, 1374);
-	wLinkMarks = env->addWindow(Scale(700, 30, 820, 150), false, L"", SubPanelFilterOptions);
+	wLinkMarks = env->addWindow(Scale(700, 30, 820, 150), false, L"");
+	// wLinkMarks = env->addWindow(Scale(700, 30, 820, 150), false, L"", SubPanelFilterOptions);
 	wLinkMarks->getCloseButton()->setVisible(false);
 	wLinkMarks->setDrawTitlebar(false);
 	wLinkMarks->setDraggable(false);
-	wLinkMarks->setVisible(true);
+	wLinkMarks->setVisible(false); //this was true
 	btnMarksOK = env->addButton(Scale(45, 45, 75, 75), wLinkMarks, BUTTON_MARKERS_OK, gDataManager->GetSysString(1211).data());
 	defaultStrings.emplace_back(btnMarksOK, 1211);
 	btnMark[0] = env->addButton(Scale(10, 10, 40, 40), wLinkMarks, -1, L"\u2196");
@@ -824,8 +893,8 @@ void Game::Initialize() {
 	for (int i = 0; i < 8; i++)
 		btnMark[i]->setIsPushButton(true);
 
-	//search by the categories field in the cdb
-	wCategories = env->addWindow(Scale(350, 60, 900, 270), false, L"", SubPanelFilterOptions);
+	//search by the "categories" field in the cdb
+	wCategories = env->addWindow(Scale(350, 60, 900, 270), false, L"");
 	wCategories->getCloseButton()->setVisible(false);
 	wCategories->setDrawTitlebar(false);
 	wCategories->setDraggable(false);
