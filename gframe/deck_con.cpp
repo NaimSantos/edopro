@@ -149,7 +149,7 @@ void DeckBuilder::ImportDeck() {
 }
 void DeckBuilder::PrepareAdvancedFilters() {
 	adv_query.race = 0;
-	for (int i = 0; i < 32; ++i)
+	for (int i = 0; i < 33; ++i)
 		if (mainGame->advchk_monstertype[i]->isChecked())
 			adv_query.race |= ((1LL) << i);
 
@@ -163,7 +163,14 @@ void DeckBuilder::PrepareAdvancedFilters() {
 		if (mainGame->advchk_cardtype[i]->isChecked())
 			adv_query.type |= (1u << (i+offset));
 	}
-	//TODO: implement the logic for attributes
+	adv_query.attribute = 0;
+	for (int i = 0; i < 7; ++i) {
+		if (mainGame->advchk_attribute[i]->isChecked())
+			adv_query.attribute |= ((1LL) << i);
+	}
+	if (adv_query.race || adv_query.attribute || adv_query.type)
+		adv_query.isactive = true;
+
 	//TODO: implement the logic for OT/availability (there are fields to skip)
 	//TODO: implement the logic for limitations
 }
@@ -188,6 +195,7 @@ void DeckBuilder::ClearAdvancedFilters() {
 	adv_query.race = 0;
 	adv_query.limitation = 0;
 	adv_query.ot = 0;
+	adv_query.isactive = false;
 }
 void DeckBuilder::ExportDeckToClipboard(bool plain_text) {
 	auto deck_string = plain_text ? DeckManager::ExportDeckCardNames(current_deck) : DeckManager::ExportDeckYdke(current_deck);
@@ -407,6 +415,7 @@ bool DeckBuilder::OnEvent(const irr::SEvent& event) {
 			case BUTTON_ADVANCED_FILTER_OK: {
 				PrepareAdvancedFilters();
 				mainGame->HideElement(mainGame->windowAdvancedFilter);
+				StartFilter();
 				break;
 			}
 			case BUTTON_ADVANCED_FILTER_CLEAR: {
@@ -1252,61 +1261,74 @@ void DeckBuilder::FilterCards(bool force_refresh) {
 bool DeckBuilder::CheckCardProperties(const CardDataM& data) {
 	if(data._data.type & TYPE_TOKEN || data._data.ot & SCOPE_HIDDEN || ((data._data.ot & SCOPE_OFFICIAL) != data._data.ot && (!mainGame->chkAnime->isChecked() && !filterList->whitelist)))
 		return false;
-	switch(filter_type) {
-	case CARD_TYPE_FILTER_MONSTER: {
-		if(!(data._data.type & TYPE_MONSTER) || (data._data.type & filter_type2) != filter_type2)
+	//Right now, this is implemented as an "OR" (aka, either of those are true)
+	if (adv_query.isactive) {
+		if (adv_query.type && (data._data.type & adv_query.type) != adv_query.type)
 			return false;
-		if(filter_race && data._data.race != filter_race)
+		if (adv_query.attribute && !(data._data.attribute & adv_query.attribute))
 			return false;
-		if(filter_attrib && data._data.attribute != filter_attrib)
+		if (adv_query.race && !(data._data.race & adv_query.race))
 			return false;
-		if(filter_atktype) {
-			if((filter_atktype == 1 && data._data.attack != filter_atk) || (filter_atktype == 2 && data._data.attack < filter_atk)
-				|| (filter_atktype == 3 && data._data.attack <= filter_atk) || (filter_atktype == 4 && (data._data.attack > filter_atk || data._data.attack < 0))
-				|| (filter_atktype == 5 && (data._data.attack >= filter_atk || data._data.attack < 0)) || (filter_atktype == 6 && data._data.attack != -2))
-				return false;
-		}
-		if(filter_deftype) {
-			if((filter_deftype == 1 && data._data.defense != filter_def) || (filter_deftype == 2 && data._data.defense < filter_def)
-				|| (filter_deftype == 3 && data._data.defense <= filter_def) || (filter_deftype == 4 && (data._data.defense > filter_def || data._data.defense < 0))
-				|| (filter_deftype == 5 && (data._data.defense >= filter_def || data._data.defense < 0)) || (filter_deftype == 6 && data._data.defense != -2)
-				|| (data._data.type & TYPE_LINK))
-				return false;
-		}
-		if(filter_lvtype) {
-			if((filter_lvtype == 1 && data._data.level != filter_lv) || (filter_lvtype == 2 && data._data.level < filter_lv)
-				|| (filter_lvtype == 3 && data._data.level <= filter_lv) || (filter_lvtype == 4 && data._data.level > filter_lv)
-				|| (filter_lvtype == 5 && data._data.level >= filter_lv) || filter_lvtype == 6)
-				return false;
-		}
-		if(filter_scltype) {
-			if((filter_scltype == 1 && data._data.lscale != filter_scl) || (filter_scltype == 2 && data._data.lscale < filter_scl)
-				|| (filter_scltype == 3 && data._data.lscale <= filter_scl) || (filter_scltype == 4 && (data._data.lscale > filter_scl))
-				|| (filter_scltype == 5 && (data._data.lscale >= filter_scl)) || filter_scltype == 6
-				|| !(data._data.type & TYPE_PENDULUM))
-				return false;
-		}
-		break;
+		if (adv_query.ot && !(data._data.ot & adv_query.ot))
+			return false;
 	}
-	case CARD_TYPE_FILTER_SPELL: {
-		if(!(data._data.type & TYPE_SPELL))
-			return false;
-		if(filter_type2 && data._data.type != filter_type2)
-			return false;
-		break;
-	}
-	case CARD_TYPE_FILTER_TRAP: {
-		if(!(data._data.type & TYPE_TRAP))
-			return false;
-		if(filter_type2 && data._data.type != filter_type2)
-			return false;
-		break;
-	}
-	case CARD_TYPE_FILTER_SKILL: {
-		if(!(data._data.type & TYPE_SKILL))
-			return false;
-		break;
-	}
+	else{
+		switch(filter_type) {
+		case CARD_TYPE_FILTER_MONSTER: {
+			if(!(data._data.type & TYPE_MONSTER) || (data._data.type & filter_type2) != filter_type2)
+				return false;
+			if(filter_race && data._data.race != filter_race)
+				return false;
+			if(filter_attrib && data._data.attribute != filter_attrib)
+				return false;
+			if(filter_atktype) {
+				if((filter_atktype == 1 && data._data.attack != filter_atk) || (filter_atktype == 2 && data._data.attack < filter_atk)
+					|| (filter_atktype == 3 && data._data.attack <= filter_atk) || (filter_atktype == 4 && (data._data.attack > filter_atk || data._data.attack < 0))
+					|| (filter_atktype == 5 && (data._data.attack >= filter_atk || data._data.attack < 0)) || (filter_atktype == 6 && data._data.attack != -2))
+					return false;
+			}
+			if(filter_deftype) {
+				if((filter_deftype == 1 && data._data.defense != filter_def) || (filter_deftype == 2 && data._data.defense < filter_def)
+					|| (filter_deftype == 3 && data._data.defense <= filter_def) || (filter_deftype == 4 && (data._data.defense > filter_def || data._data.defense < 0))
+					|| (filter_deftype == 5 && (data._data.defense >= filter_def || data._data.defense < 0)) || (filter_deftype == 6 && data._data.defense != -2)
+					|| (data._data.type & TYPE_LINK))
+					return false;
+			}
+			if(filter_lvtype) {
+				if((filter_lvtype == 1 && data._data.level != filter_lv) || (filter_lvtype == 2 && data._data.level < filter_lv)
+					|| (filter_lvtype == 3 && data._data.level <= filter_lv) || (filter_lvtype == 4 && data._data.level > filter_lv)
+					|| (filter_lvtype == 5 && data._data.level >= filter_lv) || filter_lvtype == 6)
+					return false;
+			}
+			if(filter_scltype) {
+				if((filter_scltype == 1 && data._data.lscale != filter_scl) || (filter_scltype == 2 && data._data.lscale < filter_scl)
+					|| (filter_scltype == 3 && data._data.lscale <= filter_scl) || (filter_scltype == 4 && (data._data.lscale > filter_scl))
+					|| (filter_scltype == 5 && (data._data.lscale >= filter_scl)) || filter_scltype == 6
+					|| !(data._data.type & TYPE_PENDULUM))
+					return false;
+			}
+			break;
+		}
+		case CARD_TYPE_FILTER_SPELL: {
+			if(!(data._data.type & TYPE_SPELL))
+				return false;
+			if(filter_type2 && data._data.type != filter_type2)
+				return false;
+			break;
+		}
+		case CARD_TYPE_FILTER_TRAP: {
+			if(!(data._data.type & TYPE_TRAP))
+				return false;
+			if(filter_type2 && data._data.type != filter_type2)
+				return false;
+			break;
+		}
+		case CARD_TYPE_FILTER_SKILL: {
+			if(!(data._data.type & TYPE_SKILL))
+				return false;
+			break;
+			}
+		}
 	}
 	if(filter_effect && !(data._data.category & filter_effect))
 		return false;

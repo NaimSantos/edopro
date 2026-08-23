@@ -63,6 +63,7 @@ public:
 		SEARCH_MODIFIER modifier;
 	};
 	struct AdvQuery {
+		bool isactive {false};
 		uint32_t type{}; //card type
 		uint32_t attribute{};
 		long long race{};
