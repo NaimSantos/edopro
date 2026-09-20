@@ -800,11 +800,11 @@ void Game::Initialize() {
 	ebDefense->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
 
 	// button "Effect" (the categories a card has in the database):
-	btnEffectFilter = AlignElementWithParent(env->addButton(Scale(520, 5, 590, 25), SubPanelFilterOptions, BUTTON_EFFECT_FILTER, gDataManager->GetSysString(1326).data(), gDataManager->GetSysString(1737).data()));
+	btnEffectFilter = AlignElementWithParent(env->addButton(Scale(520, 5, 590, 25), SubPanelFilterOptions, BUTTON_EFFECT_FILTER, gDataManager->GetSysString(1326).data()));
 	defaultStrings.emplace_back(btnEffectFilter, 1326);
 
 	// button to open a panel with advanced/complex/compound filtering options:
-	btnAdvancedFilters = AlignElementWithParent(env->addButton(Scale(600, 5, 700, 80), SubPanelFilterOptions, BUTTON_ADVANCED_FILTER, gDataManager->GetSysString(1715).data(), gDataManager->GetSysString(1736).data()));
+	btnAdvancedFilters = AlignElementWithParent(env->addButton(Scale(600, 5, 700, 80), SubPanelFilterOptions, BUTTON_ADVANCED_FILTER, gDataManager->GetSysString(1715).data()));
 	defaultStrings.emplace_back(btnAdvancedFilters, 1715);
 	{
 		//Criando em um novo painel
@@ -946,28 +946,15 @@ void Game::Initialize() {
 
 	// Things in the Search options:
 	auto SubPanelSearchOptions = mainGame->tabs_deck_editor.panel_for_tab3->getSubpanel();
-	stSearch = env->addStaticText(gDataManager->GetSysString(1325).data(), Scale(5, 10, 75, 30), false, false, SubPanelSearchOptions);
+	stSearch = env->addStaticText(gDataManager->GetSysString(1325).data(), Scale(5, 10, 75, 40), false, false, SubPanelSearchOptions);
 	defaultStrings.emplace_back(stSearch, 1325);
-	ebCardName = AlignElementWithParent(env->addEditBox(L"", Scale(600, 10, 880, 40), true, env->getRootGUIElement(), EDITBOX_KEYWORD));
+	ebCardName = AlignElementWithParent(env->addEditBox(L"", Scale(110, 10, 230, 40), true, SubPanelSearchOptions, EDITBOX_KEYWORD));
 	ebCardName->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
 
-
-	btnStartFilter = AlignElementWithParent(env->addButton(Scale(890, 10, 950, 40), env->getRootGUIElement(), BUTTON_START_FILTER, gDataManager->GetSysString(1327).data()));
+	btnStartFilter = AlignElementWithParent(env->addButton(Scale(5, 45, 100, 75), SubPanelSearchOptions, BUTTON_START_FILTER, gDataManager->GetSysString(1327).data()));
 	defaultStrings.emplace_back(btnStartFilter, 1327);
-	btnClearFilter = AlignElementWithParent(env->addButton(Scale(960, 10, 1020, 40), env->getRootGUIElement(), BUTTON_CLEAR_FILTER, gDataManager->GetSysString(1304).data()));
+	btnClearFilter = AlignElementWithParent(env->addButton(Scale(110, 45, 230, 75), SubPanelSearchOptions, BUTTON_CLEAR_FILTER, gDataManager->GetSysString(1304).data()));
 	defaultStrings.emplace_back(btnClearFilter, 1304);
-
-	ebCardName->setVisible(false);
-	btnStartFilter->setVisible(false);
-	btnClearFilter->setVisible(false);
-
-	//Original, in the Search options tab
-	// ebCardName = AlignElementWithParent(env->addEditBox(L"", Scale(110, 10, 230, 40), true, SubPanelSearchOptions, EDITBOX_KEYWORD));
-	// ebCardName->setTextAlignment(irr::gui::EGUIA_CENTER, irr::gui::EGUIA_CENTER);
-	// btnStartFilter = AlignElementWithParent(env->addButton(Scale(5, 45, 100, 75), SubPanelSearchOptions, BUTTON_START_FILTER, gDataManager->GetSysString(1327).data()));
-	// defaultStrings.emplace_back(btnStartFilter, 1327);
-	// btnClearFilter = AlignElementWithParent(env->addButton(Scale(110, 45, 230, 75), SubPanelSearchOptions, BUTTON_CLEAR_FILTER, gDataManager->GetSysString(1304).data()));
-	// defaultStrings.emplace_back(btnClearFilter, 1304);
 
 	
 
@@ -3930,12 +3917,6 @@ void Game::OnResize() {
 
 	//From the tab: "Search options"
 	stSearch->setRelativePosition(ResizeWin(5, 10, 75, 40));
-
-	// For the constant search bar:
-	ebCardName->setRelativePosition(ResizeWin(600, 10, 880, 40));
-	btnStartFilter->setRelativePosition(ResizeWin(890, 10, 950, 40));
-	btnClearFilter->setRelativePosition(ResizeWin(960, 10, 1020, 40));
-
 
 	//wLinkMarks->setRelativePosition(ResizeWin(700, 30, 820, 150));
 
