@@ -72,6 +72,11 @@ void DeckBuilder::Initialize(bool refresh) {
 	mainGame->btnHandTest->setVisible(true);
 	mainGame->btnHandTestSettings->setVisible(true);
 	mainGame->btnYdkeManage->setVisible(true);
+	//Added by the new layout;
+	mainGame->ebCardName->setVisible(true);
+	mainGame->btnStartFilter->setVisible(true);
+	mainGame->btnClearFilter->setVisible(true);
+
 	filterList = &gdeckManager->_lfList[mainGame->cbDBLFList->getSelected()];
 	if(refresh) {
 		ClearSearch();
@@ -123,6 +128,12 @@ void DeckBuilder::Terminate(bool showmenu) {
 	mainGame->device->setEventReceiver(&mainGame->menuHandler);
 	mainGame->wACMessage->setVisible(false);
 	mainGame->scrFilter->setVisible(false);
+
+	//Added by the new layout;
+	mainGame->ebCardName->setVisible(false);
+	mainGame->btnStartFilter->setVisible(false);
+	mainGame->btnClearFilter->setVisible(false);
+
 	mainGame->SetMessageWindow();
 	int sel = mainGame->cbDBDecks->getSelected();
 	if(sel >= 0)
@@ -1261,7 +1272,7 @@ void DeckBuilder::FilterCards(bool force_refresh) {
 bool DeckBuilder::CheckCardProperties(const CardDataM& data) {
 	if(data._data.type & TYPE_TOKEN || data._data.ot & SCOPE_HIDDEN || ((data._data.ot & SCOPE_OFFICIAL) != data._data.ot && (!mainGame->chkAnime->isChecked() && !filterList->whitelist)))
 		return false;
-	//Right now, this is implemented as an "OR" (aka, either of those are true)
+	//Right now, this is implemented as an "AND" (aka, either of those are true)
 	if (adv_query.isactive) {
 		if (adv_query.type && (data._data.type & adv_query.type) != adv_query.type)
 			return false;
