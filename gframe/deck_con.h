@@ -62,6 +62,10 @@ public:
 		std::vector<uint16_t> setcodes;
 		SEARCH_MODIFIER modifier;
 	};
+	enum FILTER_OPERATOR_TYPE {
+		FILTER_AND,
+		FILTER_OR,
+	};
 	struct AdvQuery {
 		bool isactive {false};
 		uint32_t type{}; //card type
@@ -69,6 +73,9 @@ public:
 		long long race{};
 		uint32_t ot{};
 		uint32_t limitation{};
+		FILTER_OPERATOR_TYPE operator_cardtype;
+		FILTER_OPERATOR_TYPE operator_limitation;
+		FILTER_OPERATOR_TYPE operator_availabity;
 	};
 
 	bool OnEvent(const irr::SEvent& event) override;
